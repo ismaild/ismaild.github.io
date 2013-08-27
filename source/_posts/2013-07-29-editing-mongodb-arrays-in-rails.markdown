@@ -4,6 +4,8 @@ title: "Editing MongoDB Arrays in Rails"
 date: 2013-07-29 22:32
 comments: true
 categories: [mongodb, ruby, rails]
+keywords: "mongodb, ruby, rails"
+description: "Editing MongoDB Arrays in Rails, gem file"
 ---
 One of the awesome features of MongoDB is the ability to store arrays directly in your documents, which maps directly with ruby/python/js arrays etc. 
 
