@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>C{}DIEZ</title>
+  <title>Hello docker - C{}DIEZ</title>
   <meta name="author" content="Ismail Dhorat">
 
   
-  <meta name="description" content="I have been playing around recently with Docker. It could really simplify deployments, creating SAAS services or even creating your own personal PAAS &hellip;">
-  
+  <meta name="description" content="A docker tutorial to build a mongoDB service">
+  <meta name="keywords" content="docker, mongodb, saas">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://ismaild.github.io">
+  <link rel="canonical" href="http://ismaild.github.io/2013/09/hello-docker">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="C{}DIEZ" type="application/atom+xml">
@@ -76,15 +76,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/2013/09/hello-docker/">Hello Docker</a></h1>
+      <h1 class="entry-title">Hello Docker</h1>
     
     
       <p class="meta">
@@ -107,7 +104,7 @@
   </header>
 
 
-  <div class="entry-content"><p>I have been playing around recently with <a href="http://www.docker.io">Docker</a>. It could really simplify deployments, creating SAAS services or even creating your own personal PAAS.</p>
+<div class="entry-content"><p>I have been playing around recently with <a href="http://www.docker.io">Docker</a>. It could really simplify deployments, creating SAAS services or even creating your own personal PAAS.</p>
 
 <p><img class="left" src="/images/posts/docker.jpg" title="not Dockers, docker" ></p>
 
@@ -227,140 +224,16 @@
 
 <p>In the next post, we will discuss setting up a mongodb container.</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx/">Uninstall MySQL & MacPorts, Reinstall MySQL With Homebrew on Mac OSX</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Ismail Dhorat</span></span>
 
-<time datetime="2013-08-27T08:58:00+02:00" pubdate data-updated="true">Aug 27<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have recently have to set up my dev environment once again, which can be quite a bit of a pain, especially if you do not have something like <a href="http://boxen.github.com/">boxen</a>.</p>
-
-<p>This time however i decided to avoid macports all together, one of the &ldquo;benefits&rdquo; of macports over homebrew is the ability to run different versions since macports will install into /opt , though its a feature i never used, and i have had a bunch of strange build incompatabilities that has taken me quite a bit of time to debug.</p>
-
-<p>Here are the steps</p>
-
-<h2>Uninstall macports</h2>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo port -fp uninstall --follow-dependents installed
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo rm -rf /opt/local
-</span><span class='line'>sudo rm -rf /Applications/DarwinPorts
-</span><span class='line'>sudo rm -rf /Applications/MacPorts
-</span><span class='line'>sudo rm -rf /Library/LaunchDaemons/org.macports.*
-</span><span class='line'>sudo rm -rf /Library/Receipts/DarwinPorts*.pkg
-</span><span class='line'>sudo rm -rf /Library/Receipts/MacPorts*.pkg
-</span><span class='line'>sudo rm -rf /Library/StartupItems/DarwinPortsStartup
-</span><span class='line'>sudo rm -rf /Library/Tcl/darwinports1.0
-</span><span class='line'>sudo rm -rf /Library/Tcl/macports1.0
-</span><span class='line'>sudo rm -rf ~/.macports
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Uninstall MySQL</h2>
-
-<ol>
-<li>Backup any databases you have using mysqldump</li>
-<li>Stop MySQL if it is currently running, under settings > mysql</li>
-</ol>
-
-
-<p>and then run:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo rm /usr/local/mysql
-</span><span class='line'>sudo rm -rf /usr/local/mysql*
-</span><span class='line'>sudo rm -rf /Library/StartupItems/MySQLCOM
-</span><span class='line'>sudo rm -rf /Library/PreferencePanes/My*
-</span><span class='line'>sudo rm -rf /Library/Receipts/mysql*
-</span><span class='line'>sudo rm -rf /Library/Receipts/MySQL*
-</span><span class='line'>sudo rm -rf /private/var/db/receipts/*mysql*
-</span><span class='line'>rm -rf ~/Library/PreferencePanes/My*
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You may also need to edit <code>/etc/hostconfig</code> and remove the line <code>MYSQLCOM=-YES-</code></p>
-
-<h2>Install Homebrew &amp; MySQL</h2>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ruby -e <span class="s2">&quot;$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)&quot;</span>
-</span><span class='line'>brew install mysql
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Welcome to <a href="http://www.youtube.com/watch?v=hNVu55ZyC-Y&amp;list=PL7AD6AA21F4F0E76E">nirvana</a></p>
-
-<p>:)</p>
-
-<p>Seriously, i have not yet had any compatibility or weird build errors with homebrew.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/07/editing-mongodb-arrays-in-rails/">Editing MongoDB Arrays in Rails</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -372,106 +245,38 @@
   
 
 
-<time datetime="2013-07-29T22:32:00+02:00" pubdate data-updated="true">Jul 29<span>th</span>, 2013</time>
-        
-      </p>
+<time datetime="2013-09-03T01:06:00+02:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/docker/'>docker</a>, <a class='category' href='/blog/categories/mongodb/'>mongodb</a>, <a class='category' href='/blog/categories/saas/'>saas</a>
+  
+</span>
+
+
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>One of the awesome features of MongoDB is the ability to store arrays directly in your documents, which maps directly with ruby/python/js arrays etc.</p>
-
-<p>An example Post model:</p>
-
-<figure class='code'><figcaption><span>data.json </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="err">title:</span> <span class="err">&#39;Editing</span> <span class="err">MongoDB</span> <span class="err">Arrays</span> <span class="err">in</span> <span class="err">Rails&#39;</span>
-</span><span class='line'>  <span class="err">tags:</span> <span class="err">[&#39;ruby&#39;,</span> <span class="err">&#39;rails&#39;,</span> <span class="err">&#39;mongodb&#39;]</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Though when working with MongoDB arrays in rails and forms to edit the data, you could end up doing a bunch of controller logic and/or js logic just to get the data in.</p>
-
-<p>This is especially true if you want to just store a bunch of strings in the array. I tried many different ways of doing this, but the simplest solution with out any changes to your controller or forms is to just use a virtual attribute on your model.</p>
-
-<figure class='code'><figcaption><span>Post.rb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">Post</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="ss">Mongoid</span><span class="p">:</span><span class="ss">:Document</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">field</span> <span class="ss">:title</span><span class="p">,</span> <span class="ss">type</span><span class="p">:</span> <span class="nb">String</span>
-</span><span class='line'>  <span class="n">field</span> <span class="ss">:tags</span><span class="p">,</span> <span class="ss">type</span><span class="p">:</span> <span class="nb">Array</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="o">[]</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">tags_list</span><span class="o">=</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">arg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span> <span class="p">}</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">tags_list</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then in your view you just use tags_list:</p>
-
-<figure class='code'><figcaption><span>_form.html.erb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">text_field</span> <span class="ss">:tags_list</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>In the shell:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">post</span> <span class="o">=</span> <span class="no">Post</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">post</span><span class="o">.</span><span class="n">tags_list</span> <span class="o">=</span> <span class="s1">&#39;tag1, tag2, tag3&#39;</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="s2">&quot;tag1, tag2, tag3&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">post</span><span class="o">.</span><span class="n">tags</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;Tag1&quot;</span><span class="p">,</span> <span class="s2">&quot;Tag2&quot;</span><span class="p">,</span> <span class="s2">&quot;Tag3&quot;</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Any comma seperated values entered will be stored correctly in MongoDB, you could also use this to apply any transformations to the data before it saved, i.e captilizing each value.</p>
-
-<p>We ended up using this bit of code quite often, so i extracted it out to lib, and then <a href="https://github.com/ismaild/mongoid-arraylist">packaged it into a gem</a>.</p>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://ismaild.github.io/2013/09/hello-docker/" data-via="ismail" data-counturl="http://ismaild.github.io/2013/09/hello-docker/" >Tweet</a>
+  
+  
+  
 </div>
-  
-  
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx/" title="Previous Post: Uninstall MySQL & MacPorts, reinstall MySQL with Homebrew on Mac OSX">&laquo; Uninstall MySQL & MacPorts, reinstall MySQL with Homebrew on Mac OSX</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/archives">Blog Archives</a>
-    
-  </div>
 </div>
+
 <aside class="sidebar">
   
     <section>
@@ -496,7 +301,7 @@
 <section>
   <h1>Coderwall</h1>
   <ul id="cw_badges">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
 
   <script type="text/javascript">
@@ -553,7 +358,7 @@
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/ismaild">@ismaild</a> on GitHub
@@ -585,6 +390,7 @@
 
   
 </aside>
+
 
     </div>
   </div>

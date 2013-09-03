@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: mongodb | C{}DIEZ]]></title>
+  <link href="http://ismaild.github.io/blog/categories/mongodb/atom.xml" rel="self"/>
+  <link href="http://ismaild.github.io/"/>
+  <updated>2013-09-03T13:06:01+02:00</updated>
+  <id>http://ismaild.github.io/</id>
+  <author>
+    <name><![CDATA[Ismail Dhorat]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Hello docker]]></title>
+    <link href="http://ismaild.github.io/2013/09/hello-docker/"/>
+    <updated>2013-09-03T01:06:00+02:00</updated>
+    <id>http://ismaild.github.io/2013/09/hello-docker</id>
+    <content type="html"><![CDATA[<p>I have been playing around recently with <a href="http://www.docker.io">Docker</a>. It could really simplify deployments, creating SAAS services or even creating your own personal PAAS.</p>
+
+<p><img class="left" src="/images/posts/docker.jpg" title="not Dockers, docker" ></p>
+
+<h3>What is docker?</h3>
+
+<blockquote><p>Docker is an open-source project to easily create lightweight, portable, self-sufficient containers from any application. The same container that a developer builds and tests on a laptop can run at scale, in production, on VMs, bare metal, OpenStack clusters, public clouds and more.</p></blockquote>
+
+<h3>Containers vs Virtual Machines</h3>
+
+<p><strong>Virtual Machines:</strong> require a complete operating system image, with allocated resources to run. They take a long time to bootup, and have quite a bit of overhead.</p>
+
+<p><strong>Containers:</strong> are much more lightweight, since there is no overhead of a complete virtual environment, with the kernnal managing the memory and access to the file system. This also means you can bootup an application in seconds.</p>
+
+<h3>Install docker</h3>
+
+<p>The simplest method would be to use vagrant to set it up on Mac or Linux. (<a href="http://docs.docker.io/en/latest/installation/vagrant/">http://docs.docker.io/en/latest/installation/vagrant/</a>)</p>
+
+<h4>Setup with vagrant</h4>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/dotcloud/docker.git&quot;</span>&gt;https://github.com/dotcloud/docker.git&lt;/a&gt;
+</span><span class='line'><span class="nb">cd </span>docker
+</span><span class='line'>vagrant up
+</span><span class='line'>vagrant ssh
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>Manual Setup</h4>
+
+<ul>
+<li>Install virtualbox &ndash; (<a href="https://www.virtualbox.org">https://www.virtualbox.org</a>)</li>
+<li>Launch a new VM, and install ubuntu 12.04 (64 bit) &ndash; (<a href="http://www.ubuntu.org">http://www.ubuntu.org</a>)</li>
+</ul>
+
+
+<p>Docker works best with the 3.8 kernel due to a bug in lxc which can cause some issues if you are on 3.2.  run <code>uname -r</code> to check which version you are on, and run the following if you are not on 3.8</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get update&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo apt-get install linux-image-generic-lts-raring linux-headers-generic-lts-raring&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo reboot
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Then run&hellip;</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get update&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo apt-get upgrade&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo apt-get install python-software-properties git-core build-essentials ssh&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo apt-get update&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo add-apt-repository ppa:dotcloud/lxc-docker&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo apt-get install lxc-docker
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now, hello world&hellip; docker style.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker run ubuntu /bin/echo hello world
+</span><span class='line'><span class="o">[</span>sudo<span class="o">]</span> password <span class="k">for </span>dock:
+</span><span class='line'>Pulling repository ubuntu
+</span><span class='line'>Pulling image 8dbd9e392a964056420e5d58ca5cc376ef18e2de93b5cc90e868a1bbc8318c1c <span class="o">(</span>precise<span class="o">)</span> from ubuntu
+</span><span class='line'>Pulling image b750fe79269d2ec9a3c593ef05b4332b1d1a02a62b4accb2c21d589ff2f5f2dc <span class="o">(</span>quantal<span class="o">)</span> from ubuntu
+</span><span class='line'>Pulling 27cf784147099545 metadata
+</span><span class='line'>Pulling 27cf784147099545 fs layer
+</span><span class='line'>Downloading 94.86 MB/94.86 MB <span class="o">(</span>100%<span class="o">)</span>
+</span><span class='line'>hello world
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>What just happened?</h4>
+
+<ul>
+<li>docker downloaded the base image from the docker index</li>
+<li>it created a new LXC container</li>
+<li>It allocated a filesystem for it</li>
+<li>Mounted a read-write layer</li>
+<li>Allocated a network interface</li>
+<li>Setup an IP for it, with network address translation</li>
+<li>And then executed a process in there</li>
+<li>Captured its output and printed it to you</li>
+</ul>
+
+
+<p>In the next post, we will discuss setting up a mongodb container.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Editing MongoDB Arrays in Rails]]></title>
+    <link href="http://ismaild.github.io/2013/07/editing-mongodb-arrays-in-rails/"/>
+    <updated>2013-07-29T22:32:00+02:00</updated>
+    <id>http://ismaild.github.io/2013/07/editing-mongodb-arrays-in-rails</id>
+    <content type="html"><![CDATA[<p>One of the awesome features of MongoDB is the ability to store arrays directly in your documents, which maps directly with ruby/python/js arrays etc.</p>
+
+<p>An example Post model:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>data.json </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="err">title:</span> <span class="err">&amp;lsquo;Editing</span> <span class="err">MongoDB</span> <span class="err">Arrays</span> <span class="err">in</span> <span class="err">Rails&amp;rsquo;</span>
+</span><span class='line'>  <span class="err">tags:</span> <span class="err">[&amp;lsquo;ruby&amp;rsquo;,</span> <span class="err">&amp;lsquo;rails&amp;rsquo;,</span> <span class="err">&amp;lsquo;mongodb&amp;rsquo;]</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Though when working with MongoDB arrays in rails and forms to edit the data, you could end up doing a bunch of controller logic and/or js logic just to get the data in.</p>
+
+<p>This is especially true if you want to just store a bunch of strings in the array. I tried many different ways of doing this, but the simplest solution with out any changes to your controller or forms is to just use a virtual attribute on your model.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Post.rb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">Post</span>
+</span><span class='line'>  <span class="kp">include</span> <span class="ss">Mongoid</span><span class="p">:</span><span class="ss">:Document</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  field :title, type: String</span>
+</span><span class='line'><span class="sr">  field :tags, type: Array, default: []&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">def</span> <span class="nf">tags_list</span><span class="o">=</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;self.tags = arg.split(&#39;,&#39;).map { |v| v.strip }</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  end&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">def</span> <span class="nf">tags_list</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;self.tags.join(&#39;, &#39;)</span>
+</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;  end</span>
+</span><span class='line'><span class="sr">end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Then in your view you just use tags_list:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>_form.html.erb </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&amp;lt;%= f.text_field :tags_list </span><span class="err">%&gt;</span><span class="x"></span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>In the shell:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">post</span> <span class="o">=</span> <span class="no">Post</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">post</span><span class="o">.</span><span class="n">tags_list</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">tag1</span><span class="p">,</span> <span class="n">tag2</span><span class="p">,</span> <span class="n">tag3</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">tag1</span><span class="p">,</span> <span class="n">tag2</span><span class="p">,</span> <span class="n">tag3</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="sr">&lt;p&gt;post.tags</span>
+</span><span class='line'><span class="sr">=&gt; [&amp;ldquo;Tag1&amp;rdquo;, &amp;ldquo;Tag2&amp;rdquo;, &amp;ldquo;Tag3&amp;rdquo;]&lt;br/</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Any comma seperated values entered will be stored correctly in MongoDB, you could also use this to apply any transformations to the data before it saved, i.e captilizing each value.</p>
+
+<p>We ended up using this bit of code quite often, so i extracted it out to lib, and then <a href="https://github.com/ismaild/mongoid-arraylist">packaged it into a gem</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>
