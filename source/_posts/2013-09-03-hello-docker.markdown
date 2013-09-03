@@ -18,7 +18,7 @@ I have been playing around recently with [Docker](http://www.docker.io). It coul
 
 **Virtual Machines:** require a complete operating system image, with allocated resources to run. They take a long time to bootup, and have quite a bit of overhead.
 
-**Containers:** are much more lightweight, since there is no overhead of a complete virtual environment, with the kernnal managing the memory and access to the file system. This also means you can bootup an application in seconds.
+**Containers:** are much more lightweight, since there is no overhead of a complete virtual environment, with the kernel managing the memory and access to the file system. This also means you can bootup an application in seconds.
 
 ### Install docker
 
