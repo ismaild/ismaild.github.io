@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://ismaild.github.io/sitemap.xml 
+Sitemap: http://blog.codiez.co.za/sitemap.xml 

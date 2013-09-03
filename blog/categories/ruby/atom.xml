@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: ruby | C{}DIEZ]]></title>
-  <link href="http://ismaild.github.io/blog/categories/ruby/atom.xml" rel="self"/>
-  <link href="http://ismaild.github.io/"/>
-  <updated>2013-09-03T13:06:01+02:00</updated>
-  <id>http://ismaild.github.io/</id>
+  <link href="http://blog.codiez.co.za/blog/categories/ruby/atom.xml" rel="self"/>
+  <link href="http://blog.codiez.co.za/"/>
+  <updated>2013-09-03T16:29:39+02:00</updated>
+  <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Editing MongoDB Arrays in Rails]]></title>
-    <link href="http://ismaild.github.io/2013/07/editing-mongodb-arrays-in-rails/"/>
+    <link href="http://blog.codiez.co.za/2013/07/editing-mongodb-arrays-in-rails/"/>
     <updated>2013-07-29T22:32:00+02:00</updated>
-    <id>http://ismaild.github.io/2013/07/editing-mongodb-arrays-in-rails</id>
+    <id>http://blog.codiez.co.za/2013/07/editing-mongodb-arrays-in-rails</id>
     <content type="html"><![CDATA[<p>One of the awesome features of MongoDB is the ability to store arrays directly in your documents, which maps directly with ruby/python/js arrays etc.</p>
 
 <p>An example Post model:</p>

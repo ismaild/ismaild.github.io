@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: docker | C{}DIEZ]]></title>
-  <link href="http://ismaild.github.io/blog/categories/docker/atom.xml" rel="self"/>
-  <link href="http://ismaild.github.io/"/>
-  <updated>2013-09-03T13:06:01+02:00</updated>
-  <id>http://ismaild.github.io/</id>
+  <link href="http://blog.codiez.co.za/blog/categories/docker/atom.xml" rel="self"/>
+  <link href="http://blog.codiez.co.za/"/>
+  <updated>2013-09-03T16:29:39+02:00</updated>
+  <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
     
@@ -15,12 +15,10 @@
   
   <entry>
     <title type="html"><![CDATA[Hello docker]]></title>
-    <link href="http://ismaild.github.io/2013/09/hello-docker/"/>
+    <link href="http://blog.codiez.co.za/2013/09/hello-docker/"/>
     <updated>2013-09-03T01:06:00+02:00</updated>
-    <id>http://ismaild.github.io/2013/09/hello-docker</id>
+    <id>http://blog.codiez.co.za/2013/09/hello-docker</id>
     <content type="html"><![CDATA[<p>I have been playing around recently with <a href="http://www.docker.io">Docker</a>. It could really simplify deployments, creating SAAS services or even creating your own personal PAAS.</p>
-
-<p><img class="left" src="/images/posts/docker.jpg" title="not Dockers, docker" ></p>
 
 <h3>What is docker?</h3>
 

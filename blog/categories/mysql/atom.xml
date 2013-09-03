@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: mysql | C{}DIEZ]]></title>
-  <link href="http://ismaild.github.io/blog/categories/mysql/atom.xml" rel="self"/>
-  <link href="http://ismaild.github.io/"/>
-  <updated>2013-09-03T13:06:01+02:00</updated>
-  <id>http://ismaild.github.io/</id>
+  <link href="http://blog.codiez.co.za/blog/categories/mysql/atom.xml" rel="self"/>
+  <link href="http://blog.codiez.co.za/"/>
+  <updated>2013-09-03T16:29:39+02:00</updated>
+  <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Uninstall MySQL & MacPorts, reinstall MySQL with Homebrew on Mac OSX]]></title>
-    <link href="http://ismaild.github.io/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx/"/>
+    <link href="http://blog.codiez.co.za/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx/"/>
     <updated>2013-08-27T08:58:00+02:00</updated>
-    <id>http://ismaild.github.io/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx</id>
+    <id>http://blog.codiez.co.za/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx</id>
     <content type="html"><![CDATA[<p>I have recently have to set up my dev environment once again, which can be quite a bit of a pain, especially if you do not have something like <a href="http://boxen.github.com/">boxen</a>.</p>
 
 <p>This time however i decided to avoid macports all together, one of the &ldquo;benefits&rdquo; of macports over homebrew is the ability to run different versions since macports will install into /opt , though its a feature i never used, and i have had a bunch of strange build incompatabilities that has taken me quite a bit of time to debug.</p>
