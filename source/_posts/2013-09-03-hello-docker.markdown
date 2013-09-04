@@ -86,4 +86,4 @@ hello world
 - And then executed a process in there
 - Captured its output and printed it to you
 
-In the next post, we will discuss setting up a mongodb container.
+In the next post, we will discuss setting up a [docker container with mongodb](/2013/09/setup-a-docker-container-with-mongodb/).
