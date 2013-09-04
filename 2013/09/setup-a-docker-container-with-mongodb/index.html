@@ -5,18 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>C{}DIEZ</title>
+  <title>Setup a Docker container with MongoDB - C{}DIEZ</title>
   <meta name="author" content="Ismail Dhorat">
 
   
-  <meta name="description" content="If you have not yet setup docker, follow the install docker post before this. First, lets take a look at what docker images we have. 1
-2
-3
-4
-5
-6
-7 &hellip;">
-  
+  <meta name="description" content="Setup MongoDB in a docker container">
+  <meta name="keywords" content="docker, mongodb, saas">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -24,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.codiez.co.za">
+  <link rel="canonical" href="http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="C{}DIEZ" type="application/atom+xml">
@@ -82,15 +76,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/2013/09/setup-a-docker-container-with-mongodb/">Setup a Docker Container With MongoDB</a></h1>
+      <h1 class="entry-title">Setup a Docker Container With MongoDB</h1>
     
     
       <p class="meta">
@@ -113,7 +104,7 @@
   </header>
 
 
-  <div class="entry-content"><p>If you have not yet setup docker, follow the <a href="/2013/09/hello-docker/">install docker</a> post before this.</p>
+<div class="entry-content"><p>If you have not yet setup docker, follow the <a href="/2013/09/hello-docker/">install docker</a> post before this.</p>
 
 <p>First, lets take a look at what docker images we have.</p>
 
@@ -294,174 +285,16 @@
 
 <p>The next post will discuss creating a web GUI to automatically provision new MongoDB servers for multitenancy.</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/09/hello-docker/">Hello Docker</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Ismail Dhorat</span></span>
 
-<time datetime="2013-09-03T01:06:00+02:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have been playing around recently with <a href="http://www.docker.io">Docker</a>. It could really simplify deployments, creating SAAS services or even creating your own personal PAAS.</p>
-
-<h3>What is docker?</h3>
-
-<blockquote><p>Docker is an open-source project to easily create lightweight, portable, self-sufficient containers from any application. The same container that a developer builds and tests on a laptop can run at scale, in production, on VMs, bare metal, OpenStack clusters, public clouds and more.</p></blockquote>
-
-<h3>Containers vs Virtual Machines</h3>
-
-<p><strong>Virtual Machines:</strong> require a complete operating system image, with allocated resources to run. They take a long time to bootup, and have quite a bit of overhead.</p>
-
-<p><strong>Containers:</strong> are much more lightweight, since there is no overhead of a complete virtual environment, with the kernel managing the memory and access to the file system. This also means you can bootup an application in seconds.</p>
-
-<h3>Install docker</h3>
-
-<p>The simplest method would be to use vagrant to set it up on Mac or Linux. (<a href="http://docs.docker.io/en/latest/installation/vagrant/">http://docs.docker.io/en/latest/installation/vagrant/</a>)</p>
-
-<h4>Setup with vagrant</h4>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git clone https://github.com/dotcloud/docker.git
-</span><span class='line'><span class="nb">cd </span>docker
-</span><span class='line'>vagrant up
-</span><span class='line'>vagrant ssh
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Manual Setup</h4>
-
-<ul>
-<li>Install virtualbox &ndash; (<a href="https://www.virtualbox.org">https://www.virtualbox.org</a>)</li>
-<li>Launch a new VM, and install ubuntu 12.04 (64 bit) &ndash; (<a href="http://www.ubuntu.org">http://www.ubuntu.org</a>)</li>
-</ul>
-
-
-<p>Docker works best with the 3.8 kernel due to a bug in lxc which can cause some issues if you are on 3.2.  run <code>uname -r</code> to check which version you are on, and run the following if you are not on 3.8</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get update
-</span><span class='line'>
-</span><span class='line'>sudo apt-get install linux-image-generic-lts-raring linux-headers-generic-lts-raring
-</span><span class='line'>
-</span><span class='line'>sudo reboot
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then run&hellip;</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get update
-</span><span class='line'>
-</span><span class='line'>sudo apt-get upgrade
-</span><span class='line'>
-</span><span class='line'>sudo apt-get install python-software-properties git-core build-essentials ssh
-</span><span class='line'>
-</span><span class='line'>sudo apt-get update
-</span><span class='line'>
-</span><span class='line'>sudo add-apt-repository ppa:dotcloud/lxc-docker
-</span><span class='line'>
-</span><span class='line'>sudo apt-get install lxc-docker
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now, hello world&hellip; docker style.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker run ubuntu /bin/echo hello world
-</span><span class='line'><span class="o">[</span>sudo<span class="o">]</span> password <span class="k">for </span>dock:
-</span><span class='line'>Pulling repository ubuntu
-</span><span class='line'>Pulling image 8dbd9e392a964056420e5d58ca5cc376ef18e2de93b5cc90e868a1bbc8318c1c <span class="o">(</span>precise<span class="o">)</span> from ubuntu
-</span><span class='line'>Pulling image b750fe79269d2ec9a3c593ef05b4332b1d1a02a62b4accb2c21d589ff2f5f2dc <span class="o">(</span>quantal<span class="o">)</span> from ubuntu
-</span><span class='line'>Pulling 27cf784147099545 metadata
-</span><span class='line'>Pulling 27cf784147099545 fs layer
-</span><span class='line'>Downloading 94.86 MB/94.86 MB <span class="o">(</span>100%<span class="o">)</span>
-</span><span class='line'>hello world
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>What just happened?</h4>
-
-<ul>
-<li>docker downloaded the base image from the docker index</li>
-<li>it created a new LXC container</li>
-<li>It allocated a filesystem for it</li>
-<li>Mounted a read-write layer</li>
-<li>Allocated a network interface</li>
-<li>Setup an IP for it, with network address translation</li>
-<li>And then executed a process in there</li>
-<li>Captured its output and printed it to you</li>
-</ul>
-
-
-<p>In the next post, we will discuss setting up a <a href="/2013/09/setup-a-docker-container-with-mongodb/">docker container with mongodb</a>.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx/">Uninstall MySQL & MacPorts, Reinstall MySQL With Homebrew on Mac OSX</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -473,224 +306,44 @@
   
 
 
-<time datetime="2013-08-27T08:58:00+02:00" pubdate data-updated="true">Aug 27<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I have recently have to set up my dev environment once again, which can be quite a bit of a pain, especially if you do not have something like <a href="http://boxen.github.com/">boxen</a>.</p>
-
-<p>This time however i decided to avoid macports all together, one of the &ldquo;benefits&rdquo; of macports over homebrew is the ability to run different versions since macports will install into /opt , though its a feature i never used, and i have had a bunch of strange build incompatabilities that has taken me quite a bit of time to debug.</p>
-
-<p>Here are the steps</p>
-
-<h2>Uninstall macports</h2>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo port -fp uninstall --follow-dependents installed
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo rm -rf /opt/local
-</span><span class='line'>sudo rm -rf /Applications/DarwinPorts
-</span><span class='line'>sudo rm -rf /Applications/MacPorts
-</span><span class='line'>sudo rm -rf /Library/LaunchDaemons/org.macports.*
-</span><span class='line'>sudo rm -rf /Library/Receipts/DarwinPorts*.pkg
-</span><span class='line'>sudo rm -rf /Library/Receipts/MacPorts*.pkg
-</span><span class='line'>sudo rm -rf /Library/StartupItems/DarwinPortsStartup
-</span><span class='line'>sudo rm -rf /Library/Tcl/darwinports1.0
-</span><span class='line'>sudo rm -rf /Library/Tcl/macports1.0
-</span><span class='line'>sudo rm -rf ~/.macports
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Uninstall MySQL</h2>
-
-<ol>
-<li>Backup any databases you have using mysqldump</li>
-<li>Stop MySQL if it is currently running, under settings > mysql</li>
-</ol>
-
-
-<p>and then run:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo rm /usr/local/mysql
-</span><span class='line'>sudo rm -rf /usr/local/mysql*
-</span><span class='line'>sudo rm -rf /Library/StartupItems/MySQLCOM
-</span><span class='line'>sudo rm -rf /Library/PreferencePanes/My*
-</span><span class='line'>sudo rm -rf /Library/Receipts/mysql*
-</span><span class='line'>sudo rm -rf /Library/Receipts/MySQL*
-</span><span class='line'>sudo rm -rf /private/var/db/receipts/*mysql*
-</span><span class='line'>rm -rf ~/Library/PreferencePanes/My*
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>You may also need to edit <code>/etc/hostconfig</code> and remove the line <code>MYSQLCOM=-YES-</code></p>
-
-<h2>Install Homebrew &amp; MySQL</h2>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>ruby -e <span class="s2">&quot;$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)&quot;</span>
-</span><span class='line'>brew install mysql
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Welcome to <a href="http://www.youtube.com/watch?v=hNVu55ZyC-Y&amp;list=PL7AD6AA21F4F0E76E">nirvana</a></p>
-
-<p>:)</p>
-
-<p>Seriously, i have not yet had any compatibility or weird build errors with homebrew.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2013-09-04T09:09:00+02:00" pubdate data-updated="true">Sep 4<span>th</span>, 2013</time>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/2013/07/editing-mongodb-arrays-in-rails/">Editing MongoDB Arrays in Rails</a></h1>
-    
-    
-      <p class="meta">
-        
 
-
-
-
-
-
-
-
+<span class="categories">
   
+    <a class='category' href='/categories/docker/'>docker</a>, <a class='category' href='/categories/mongodb/'>mongodb</a>, <a class='category' href='/categories/saas/'>saas</a>
+  
+</span>
 
 
-<time datetime="2013-07-29T22:32:00+02:00" pubdate data-updated="true">Jul 29<span>th</span>, 2013</time>
-        
-      </p>
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p>One of the awesome features of MongoDB is the ability to store arrays directly in your documents, which maps directly with ruby/python/js arrays etc.</p>
-
-<p>An example Post model:</p>
-
-<figure class='code'><figcaption><span>data.json </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="err">title:</span> <span class="err">&#39;Editing</span> <span class="err">MongoDB</span> <span class="err">Arrays</span> <span class="err">in</span> <span class="err">Rails&#39;</span>
-</span><span class='line'>  <span class="err">tags:</span> <span class="err">[&#39;ruby&#39;,</span> <span class="err">&#39;rails&#39;,</span> <span class="err">&#39;mongodb&#39;]</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Though when working with MongoDB arrays in rails and forms to edit the data, you could end up doing a bunch of controller logic and/or js logic just to get the data in.</p>
-
-<p>This is especially true if you want to just store a bunch of strings in the array. I tried many different ways of doing this, but the simplest solution with out any changes to your controller or forms is to just use a virtual attribute on your model.</p>
-
-<figure class='code'><figcaption><span>Post.rb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">Post</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="ss">Mongoid</span><span class="p">:</span><span class="ss">:Document</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">field</span> <span class="ss">:title</span><span class="p">,</span> <span class="ss">type</span><span class="p">:</span> <span class="nb">String</span>
-</span><span class='line'>  <span class="n">field</span> <span class="ss">:tags</span><span class="p">,</span> <span class="ss">type</span><span class="p">:</span> <span class="nb">Array</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="o">[]</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">tags_list</span><span class="o">=</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">arg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span> <span class="p">}</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">tags_list</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Then in your view you just use tags_list:</p>
-
-<figure class='code'><figcaption><span>_form.html.erb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">text_field</span> <span class="ss">:tags_list</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>In the shell:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">post</span> <span class="o">=</span> <span class="no">Post</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">post</span><span class="o">.</span><span class="n">tags_list</span> <span class="o">=</span> <span class="s1">&#39;tag1, tag2, tag3&#39;</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="s2">&quot;tag1, tag2, tag3&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">post</span><span class="o">.</span><span class="n">tags</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;Tag1&quot;</span><span class="p">,</span> <span class="s2">&quot;Tag2&quot;</span><span class="p">,</span> <span class="s2">&quot;Tag3&quot;</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Any comma seperated values entered will be stored correctly in MongoDB, you could also use this to apply any transformations to the data before it saved, i.e captilizing each value.</p>
-
-<p>We ended up using this bit of code quite often, so i extracted it out to lib, and then <a href="https://github.com/ismaild/mongoid-arraylist">packaged it into a gem</a>.</p>
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb/" data-via="ismail" data-counturl="http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb/" >Tweet</a>
+  
+  
+  
 </div>
-  
-  
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2013/09/hello-docker/" title="Previous Post: Hello docker">&laquo; Hello docker</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/archives">Blog Archives</a>
-    
-  </div>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
+  </section>
+
+</div>
+
 <aside class="sidebar">
   
     <section>
@@ -719,7 +372,7 @@
 <section>
   <h1>Coderwall</h1>
   <ul id="cw_badges">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
 
   <script type="text/javascript">
@@ -776,7 +429,7 @@
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/ismaild">@ismaild</a> on GitHub
@@ -809,6 +462,7 @@
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -823,7 +477,10 @@
       var disqus_shortname = 'codiez';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb/';
+        var disqus_url = 'http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: docker | C{}DIEZ]]></title>
+  <link href="http://blog.codiez.co.za/categories/docker/atom.xml" rel="self"/>
+  <link href="http://blog.codiez.co.za/"/>
+  <updated>2013-09-04T12:59:25+02:00</updated>
+  <id>http://blog.codiez.co.za/</id>
+  <author>
+    <name><![CDATA[Ismail Dhorat]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Setup a Docker container with MongoDB]]></title>
+    <link href="http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb/"/>
+    <updated>2013-09-04T09:09:00+02:00</updated>
+    <id>http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb</id>
+    <content type="html"><![CDATA[<p>If you have not yet setup docker, follow the <a href="/2013/09/hello-docker/">install docker</a> post before this.</p>
+
+<p>First, lets take a look at what docker images we have.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker images
+</span><span class='line'>REPOSITORY          TAG                 ID                  CREATED             SIZE
+</span><span class='line'>ubuntu              12.04               8dbd9e392a96        4 months ago        131.5 MB <span class="o">(</span>virtual 131.5 MB<span class="o">)</span>
+</span><span class='line'>ubuntu              12.10               b750fe79269d        5 months ago        24.65 kB <span class="o">(</span>virtual 180.1 MB<span class="o">)</span>
+</span><span class='line'>ubuntu              latest              8dbd9e392a96        4 months ago        131.5 MB <span class="o">(</span>virtual 131.5 MB<span class="o">)</span>
+</span><span class='line'>ubuntu              precise             8dbd9e392a96        4 months ago        131.5 MB <span class="o">(</span>virtual 131.5 MB<span class="o">)</span>
+</span><span class='line'>ubuntu              quantal             b750fe79269d        5 months ago        24.65 kB <span class="o">(</span>virtual 180.1 MB<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Notice we have the images locally, so if we run the hello world the command runs instantly, without the need to download images again.</p>
+
+<p>Now, lets check if we have and docker containers running:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker ps
+</span><span class='line'>ID                  IMAGE               COMMAND             CREATED             STATUS              PORTS
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>As exepcted, we do not have any containers currently running.</p>
+
+<h2>Install MongoDB</h2>
+
+<p>Start an interactive shell in a container with: <code>sudo docker run -i -t ubuntu /bin/bash</code></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>root@f9d75a04ce10:/# apt-key adv &amp;mdash;keyserver hkp://keyserver.ubuntu.com:80 &amp;mdash;recv 7F0CEB10&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;root@f9d75a04ce10:/# <span class="nb">echo</span> &amp;lsquo;deb &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://downloads-distro.mongodb.org/repo/ubuntu-upstart&quot;</span>&gt;http://downloads-distro.mongodb.org/repo/ubuntu-upstart&lt;/a&gt; dist 10gen&amp;rsquo; | tee /etc/apt/sources.list.d/10gen.list&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;root@f9d75a04ce10:/# apt-get update&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;h1&gt;initctl fix&lt;/h1&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;root@a1f0680f8458:/# dpkg-divert &amp;mdash;local &amp;mdash;rename &amp;mdash;add /sbin/initctl&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;root@a1f0680f8458:/# ln -s /bin/true /sbin/initctl&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;root@a1f0680f8458:/# apt-get install mongodb-10gen&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;root@a1f0680f8458:/# mkdir -p /data/db&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;root@a1f0680f8458:/# mongod
+</span><span class='line'>mongod &amp;mdash;help <span class="k">for </span><span class="nb">help </span>and startup options
+</span><span class='line'>Tue Sep  3 14:10:36.469 <span class="o">[</span>initandlisten<span class="o">]</span> MongoDB starting : <span class="nv">pid</span><span class="o">=</span>125 <span class="nv">port</span><span class="o">=</span>27017 <span class="nv">dbpath</span><span class="o">=</span>/data/db/ 64-bit <span class="nv">host</span><span class="o">=</span>a1f0680f8458&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;exit
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>MongoDB starts succesfully in the container. Now we need to commit the container, to save the state and push to the docker index.</p>
+
+<p><code>sudo docker commit a1f0680f8458 codiez/mongodb</code></p>
+
+<p>Remember to replace your container id, mine was <code>a1f0680f8458</code> which you can see at the prompt, and your <code>&lt;username&gt;/&lt;container_name&gt;</code></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker commit a1f0680f8458 codiez/mongodb&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;dock@saas:~<span class="nv">$ </span>sudo docker login
+</span><span class='line'>Username: codiez
+</span><span class='line'>Password:
+</span><span class='line'>Email: &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;&amp;#x6d;&amp;#x61;&amp;#x69;&amp;#x6c;&amp;#x74;&amp;#111;&amp;#58;&amp;#105;&amp;#115;&amp;#109;&amp;#x61;&amp;#x69;&amp;#x6c;&amp;#x40;&amp;#x63;&amp;#x6f;&amp;#x64;&amp;#x69;&amp;#101;&amp;#x7a;&amp;#x2e;&amp;#99;&amp;#x6f;&amp;#x2e;&amp;#x7a;&amp;#97;&quot;</span>&gt;&amp;#105;&amp;#x73;&amp;#x6d;&amp;#x61;&amp;#105;&amp;#108;&amp;#64;&amp;#99;&amp;#x6f;&amp;#x64;&amp;#105;&amp;#x65;&amp;#x7a;&amp;#x2e;&amp;#x63;&amp;#x6f;&amp;#46;&amp;#122;&amp;#97;&lt;/a&gt;
+</span><span class='line'>Login Succeeded
+</span><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker push codiez/mongodb
+</span><span class='line'>The push refers to a repository <span class="o">[</span>codiez/mongodb<span class="o">]</span> <span class="o">(</span>len: 1<span class="o">)</span>
+</span><span class='line'>Processing checksums
+</span><span class='line'>Sending image list
+</span><span class='line'>Pushing repository codiez/mongodb <span class="o">(</span>1 tags<span class="o">)</span>
+</span><span class='line'>Pushing 8dbd9e392a964056420e5d58ca5cc376ef18e2de93b5cc90e868a1bbc8318c1c
+</span><span class='line'>Image 8dbd9e392a964056420e5d58ca5cc376ef18e2de93b5cc90e868a1bbc8318c1c already pushed, skipping
+</span><span class='line'>Pushing tags <span class="k">for </span>rev <span class="o">[</span>8dbd9e392a964056420e5d58ca5cc376ef18e2de93b5cc90e868a1bbc8318c1c<span class="o">]</span> on <span class="o">{</span>&lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://registry-1.docker.io/v1/repositories/codiez/mongodb/tags/latest&quot;</span>&gt;https://registry-1.docker.io/v1/repositories/codiez/mongodb/tags/latest&lt;/a&gt;<span class="o">}</span>
+</span><span class='line'>Pushing f0ab8043e4e8135379d35410a4847769efb9245d8d4817cb24a2196c434c8506
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Once that completes, we can start MongoDB in the container, and map it to a port by running:</p>
+
+<p><code>sudo docker run -d -p 27017 codiez/mongodb /usr/bin/mongod --smallfiles</code></p>
+
+<p>This basically runs the container, based on the <code>codiez/mongodb</code> image, with the command <code>/usr/bin/mongod</code> and maps the default mongodb port 27017 to an external port.</p>
+
+<p>Check that the container is running and get the port:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker ps
+</span><span class='line'>ID                  IMAGE                   COMMAND             CREATED             STATUS              PORTS
+</span><span class='line'>a02d24fed142        codiez/mongodb:latest   /usr/bin/mongod     5 seconds ago       Up 4 seconds        49157-&gt;27017   &lt;br/&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>You can also inspect the image to grab the port by running <code>sudo docker inspect container_id</code></p>
+
+<p>Now, we can test an external connection to MongoDB, test from your local machine and connect to the VM IP with the port for your container:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mongo 192.168.0.21:49157
+</span><span class='line'>MongoDB shell version: 2.4.5
+</span><span class='line'>connecting to: 192.168.0.21:49157/test&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;blockquote&gt;&lt;p&gt;db
+</span><span class='line'><span class="nb">test</span>
+</span><span class='line'>db.posts.insert<span class="o">({</span>title:&amp;ldquo;Hello MongoDB in Docker&amp;rdquo;<span class="o">})</span>
+</span><span class='line'>db.posts.find<span class="o">()</span>
+</span><span class='line'><span class="o">{</span> &amp;ldquo;_id&amp;rdquo; : ObjectId<span class="o">(</span>&amp;ldquo;5227058d112c68baaa3b94d9&amp;rdquo;<span class="o">)</span>, &amp;ldquo;title&amp;rdquo; : &amp;ldquo;Hello MongoDB in Docker&amp;rdquo; <span class="o">}</span>&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div></p></blockquote>
+
+<p>One final commit to save the command and port mapping. Also notice you do not have to enter in the entire container id when running commands, just the first few characters.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker ps
+</span><span class='line'>ID                  IMAGE                   COMMAND                CREATED             STATUS              PORTS
+</span><span class='line'>298a43e2f98e        codiez/mongodb:latest   /usr/bin/mongod &amp;mdash;sm   35 seconds ago      Up 34 seconds       49164-&gt;27017      &lt;br/&gt;
+</span><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker commit -run &amp;lsquo;<span class="o">{</span>&amp;ldquo;Cmd&amp;rdquo;: <span class="o">[</span>&amp;ldquo;/usr/bin/mongod&amp;rdquo;, &amp;ldquo;&amp;mdash;smallfiles&amp;rdquo;<span class="o">]</span>, &amp;ldquo;PortSpecs&amp;rdquo;: <span class="o">[</span>&amp;ldquo;:27017&amp;rdquo;<span class="o">]}</span>&amp;rsquo; 298a4 codiez/mongodb
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now that we have an image, we can run <code>docker pull codiez/mongodb</code> to grab the container and run it with <code>docker run -d codiez/mongodb</code></p>
+
+<p>The next post will discuss creating a web GUI to automatically provision new MongoDB servers for multitenancy.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Hello docker]]></title>
+    <link href="http://blog.codiez.co.za/2013/09/hello-docker/"/>
+    <updated>2013-09-03T01:06:00+02:00</updated>
+    <id>http://blog.codiez.co.za/2013/09/hello-docker</id>
+    <content type="html"><![CDATA[<p>I have been playing around recently with <a href="http://www.docker.io">Docker</a>. It could really simplify deployments, creating SAAS services or even creating your own personal PAAS.</p>
+
+<h3>What is docker?</h3>
+
+<blockquote><p>Docker is an open-source project to easily create lightweight, portable, self-sufficient containers from any application. The same container that a developer builds and tests on a laptop can run at scale, in production, on VMs, bare metal, OpenStack clusters, public clouds and more.</p></blockquote>
+
+<h3>Containers vs Virtual Machines</h3>
+
+<p><strong>Virtual Machines:</strong> require a complete operating system image, with allocated resources to run. They take a long time to bootup, and have quite a bit of overhead.</p>
+
+<p><strong>Containers:</strong> are much more lightweight, since there is no overhead of a complete virtual environment, with the kernel managing the memory and access to the file system. This also means you can bootup an application in seconds.</p>
+
+<h3>Install docker</h3>
+
+<p>The simplest method would be to use vagrant to set it up on Mac or Linux. (<a href="http://docs.docker.io/en/latest/installation/vagrant/">http://docs.docker.io/en/latest/installation/vagrant/</a>)</p>
+
+<h4>Setup with vagrant</h4>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/dotcloud/docker.git&quot;</span>&gt;https://github.com/dotcloud/docker.git&lt;/a&gt;
+</span><span class='line'><span class="nb">cd </span>docker
+</span><span class='line'>vagrant up
+</span><span class='line'>vagrant ssh
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>Manual Setup</h4>
+
+<ul>
+<li>Install virtualbox &ndash; (<a href="https://www.virtualbox.org">https://www.virtualbox.org</a>)</li>
+<li>Launch a new VM, and install ubuntu 12.04 (64 bit) &ndash; (<a href="http://www.ubuntu.org">http://www.ubuntu.org</a>)</li>
+</ul>
+
+
+<p>Docker works best with the 3.8 kernel due to a bug in lxc which can cause some issues if you are on 3.2.  run <code>uname -r</code> to check which version you are on, and run the following if you are not on 3.8</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get update&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo apt-get install linux-image-generic-lts-raring linux-headers-generic-lts-raring&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo reboot
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Then run&hellip;</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get update&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo apt-get upgrade&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo apt-get install python-software-properties git-core build-essentials ssh&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo apt-get update&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo add-apt-repository ppa:dotcloud/lxc-docker&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;sudo apt-get install lxc-docker
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Now, hello world&hellip; docker style.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker run ubuntu /bin/echo hello world
+</span><span class='line'><span class="o">[</span>sudo<span class="o">]</span> password <span class="k">for </span>dock:
+</span><span class='line'>Pulling repository ubuntu
+</span><span class='line'>Pulling image 8dbd9e392a964056420e5d58ca5cc376ef18e2de93b5cc90e868a1bbc8318c1c <span class="o">(</span>precise<span class="o">)</span> from ubuntu
+</span><span class='line'>Pulling image b750fe79269d2ec9a3c593ef05b4332b1d1a02a62b4accb2c21d589ff2f5f2dc <span class="o">(</span>quantal<span class="o">)</span> from ubuntu
+</span><span class='line'>Pulling 27cf784147099545 metadata
+</span><span class='line'>Pulling 27cf784147099545 fs layer
+</span><span class='line'>Downloading 94.86 MB/94.86 MB <span class="o">(</span>100%<span class="o">)</span>
+</span><span class='line'>hello world
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>What just happened?</h4>
+
+<ul>
+<li>docker downloaded the base image from the docker index</li>
+<li>it created a new LXC container</li>
+<li>It allocated a filesystem for it</li>
+<li>Mounted a read-write layer</li>
+<li>Allocated a network interface</li>
+<li>Setup an IP for it, with network address translation</li>
+<li>And then executed a process in there</li>
+<li>Captured its output and printed it to you</li>
+</ul>
+
+
+<p>In the next post, we will discuss setting up a <a href="/2013/09/setup-a-docker-container-with-mongodb/">docker container with mongodb</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

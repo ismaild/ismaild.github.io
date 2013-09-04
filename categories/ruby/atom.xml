@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: mongodb | C{}DIEZ]]></title>
-  <link href="http://blog.codiez.co.za/blog/categories/mongodb/atom.xml" rel="self"/>
+  <title><![CDATA[Category: ruby | C{}DIEZ]]></title>
+  <link href="http://blog.codiez.co.za/categories/ruby/atom.xml" rel="self"/>
   <link href="http://blog.codiez.co.za/"/>
-  <updated>2013-09-03T16:29:39+02:00</updated>
+  <updated>2013-09-04T12:59:25+02:00</updated>
   <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
@@ -12,127 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Hello docker]]></title>
-    <link href="http://blog.codiez.co.za/2013/09/hello-docker/"/>
-    <updated>2013-09-03T01:06:00+02:00</updated>
-    <id>http://blog.codiez.co.za/2013/09/hello-docker</id>
-    <content type="html"><![CDATA[<p>I have been playing around recently with <a href="http://www.docker.io">Docker</a>. It could really simplify deployments, creating SAAS services or even creating your own personal PAAS.</p>
-
-<h3>What is docker?</h3>
-
-<blockquote><p>Docker is an open-source project to easily create lightweight, portable, self-sufficient containers from any application. The same container that a developer builds and tests on a laptop can run at scale, in production, on VMs, bare metal, OpenStack clusters, public clouds and more.</p></blockquote>
-
-<h3>Containers vs Virtual Machines</h3>
-
-<p><strong>Virtual Machines:</strong> require a complete operating system image, with allocated resources to run. They take a long time to bootup, and have quite a bit of overhead.</p>
-
-<p><strong>Containers:</strong> are much more lightweight, since there is no overhead of a complete virtual environment, with the kernnal managing the memory and access to the file system. This also means you can bootup an application in seconds.</p>
-
-<h3>Install docker</h3>
-
-<p>The simplest method would be to use vagrant to set it up on Mac or Linux. (<a href="http://docs.docker.io/en/latest/installation/vagrant/">http://docs.docker.io/en/latest/installation/vagrant/</a>)</p>
-
-<h4>Setup with vagrant</h4>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git clone &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/dotcloud/docker.git&quot;</span>&gt;https://github.com/dotcloud/docker.git&lt;/a&gt;
-</span><span class='line'><span class="nb">cd </span>docker
-</span><span class='line'>vagrant up
-</span><span class='line'>vagrant ssh
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h4>Manual Setup</h4>
-
-<ul>
-<li>Install virtualbox &ndash; (<a href="https://www.virtualbox.org">https://www.virtualbox.org</a>)</li>
-<li>Launch a new VM, and install ubuntu 12.04 (64 bit) &ndash; (<a href="http://www.ubuntu.org">http://www.ubuntu.org</a>)</li>
-</ul>
-
-
-<p>Docker works best with the 3.8 kernel due to a bug in lxc which can cause some issues if you are on 3.2.  run <code>uname -r</code> to check which version you are on, and run the following if you are not on 3.8</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get update&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;sudo apt-get install linux-image-generic-lts-raring linux-headers-generic-lts-raring&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;sudo reboot
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Then run&hellip;</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo apt-get update&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;sudo apt-get upgrade&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;sudo apt-get install python-software-properties git-core build-essentials ssh&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;sudo apt-get update&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;sudo add-apt-repository ppa:dotcloud/lxc-docker&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;sudo apt-get install lxc-docker
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>Now, hello world&hellip; docker style.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker run ubuntu /bin/echo hello world
-</span><span class='line'><span class="o">[</span>sudo<span class="o">]</span> password <span class="k">for </span>dock:
-</span><span class='line'>Pulling repository ubuntu
-</span><span class='line'>Pulling image 8dbd9e392a964056420e5d58ca5cc376ef18e2de93b5cc90e868a1bbc8318c1c <span class="o">(</span>precise<span class="o">)</span> from ubuntu
-</span><span class='line'>Pulling image b750fe79269d2ec9a3c593ef05b4332b1d1a02a62b4accb2c21d589ff2f5f2dc <span class="o">(</span>quantal<span class="o">)</span> from ubuntu
-</span><span class='line'>Pulling 27cf784147099545 metadata
-</span><span class='line'>Pulling 27cf784147099545 fs layer
-</span><span class='line'>Downloading 94.86 MB/94.86 MB <span class="o">(</span>100%<span class="o">)</span>
-</span><span class='line'>hello world
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<h4>What just happened?</h4>
-
-<ul>
-<li>docker downloaded the base image from the docker index</li>
-<li>it created a new LXC container</li>
-<li>It allocated a filesystem for it</li>
-<li>Mounted a read-write layer</li>
-<li>Allocated a network interface</li>
-<li>Setup an IP for it, with network address translation</li>
-<li>And then executed a process in there</li>
-<li>Captured its output and printed it to you</li>
-</ul>
-
-
-<p>In the next post, we will discuss setting up a mongodb container.</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Editing MongoDB Arrays in Rails]]></title>

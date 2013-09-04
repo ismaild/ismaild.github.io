@@ -2,28 +2,32 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://blog.codiez.co.za/2013/07/editing-mongodb-arrays-in-rails/</loc>
-        <lastmod>2013-08-27T09:00:56+02:00</lastmod>
+        <lastmod>2013-09-04T11:35:38+02:00</lastmod>
     </url>
     <url>
         <loc>
             http://blog.codiez.co.za/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx/
         </loc>
-        <lastmod>2013-08-27T09:44:35+02:00</lastmod>
+        <lastmod>2013-09-04T11:35:38+02:00</lastmod>
     </url>
     <url>
         <loc>http://blog.codiez.co.za/2013/09/hello-docker/</loc>
-        <lastmod>2013-09-03T13:07:15+02:00</lastmod>
+        <lastmod>2013-09-04T12:59:25+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb/</loc>
+        <lastmod>2013-09-04T12:59:25+02:00</lastmod>
     </url>
     <url>
         <loc>http://blog.codiez.co.za/archives/</loc>
-        <lastmod>2013-09-03T13:07:15+02:00</lastmod>
+        <lastmod>2013-09-04T12:59:25+02:00</lastmod>
     </url>
     <url>
         <loc>http://blog.codiez.co.za/</loc>
-        <lastmod>2013-09-03T13:07:15+02:00</lastmod>
+        <lastmod>2013-09-04T12:59:25+02:00</lastmod>
     </url>
     <url>
         <loc>http://blog.codiez.co.za/robots.txt</loc>
-        <lastmod>2013-08-15T12:10:28+02:00</lastmod>
+        <lastmod>2013-09-04T11:35:38+02:00</lastmod>
     </url>
 </urlset>
