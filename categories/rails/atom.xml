@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: ruby | C{}DIEZ]]></title>
-  <link href="http://blog.codiez.co.za/blog/categories/ruby/atom.xml" rel="self"/>
+  <title><![CDATA[Category: rails | C{}DIEZ]]></title>
+  <link href="http://blog.codiez.co.za/categories/rails/atom.xml" rel="self"/>
   <link href="http://blog.codiez.co.za/"/>
-  <updated>2013-09-04T13:20:36+02:00</updated>
+  <updated>2013-09-04T14:28:38+02:00</updated>
   <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
