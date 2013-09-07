@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Editing MongoDB Arrays in Rails - C{}DIEZ</title>
+  <title>Setup a MongoDB container with a docker file - C{}DIEZ</title>
   <meta name="author" content="Ismail Dhorat">
 
   
-  <meta name="description" content="Editing MongoDB Arrays in Rails, gem file">
-  <meta name="keywords" content="mongodb, ruby, rails">
+  <meta name="description" content="Setup up mongodb container using a docker file">
+  <meta name="keywords" content="docker, mongodb, saas">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.codiez.co.za/2013/07/editing-mongodb-arrays-in-rails">
+  <link rel="canonical" href="http://blog.codiez.co.za/2013/09/setup-mongodb-container-docker-file">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="C{}DIEZ" type="application/atom+xml">
@@ -81,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">Editing MongoDB Arrays in Rails</h1>
+      <h1 class="entry-title">Setup a MongoDB Container With a Docker File</h1>
     
     
       <p class="meta">
@@ -97,35 +97,45 @@
   
 
 
-<time datetime="2013-07-29T22:32:00+02:00" pubdate data-updated="true">Jul 29<span>th</span>, 2013</time>
+<time datetime="2013-09-06T15:54:00+02:00" pubdate data-updated="true">Sep 6<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>One of the awesome features of MongoDB is the ability to store arrays directly in your documents, which maps directly with ruby/python/js arrays etc.</p>
+<div class="entry-content"><p>In our previous post we went through the steps to <a href="/2013/09/setup-a-docker-container-with-mongodb/">Setup a Docker Container With MongoDB</a> manually.</p>
 
-<p>An example Post model:</p>
+<p>Docker has a simple DSL that lets you automate all of these steps to make a conainer.</p>
 
-<figure class='code'><figcaption><span>data.json </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="err">title:</span> <span class="err">&#39;Editing</span> <span class="err">MongoDB</span> <span class="err">Arrays</span> <span class="err">in</span> <span class="err">Rails&#39;</span>
-</span><span class='line'>  <span class="err">tags:</span> <span class="err">[&#39;ruby&#39;,</span> <span class="err">&#39;rails&#39;,</span> <span class="err">&#39;mongodb&#39;]</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
+<h3>Docker file syntax</h3>
+
+<p>Every line in a docker file has the following structure: <code>INSTRUCTION arguments</code></p>
+
+<p>Comments are ignored, and the first line in the docker file should contain the command <code>FROM &lt;image</code></p>
+
+<p>Commands available <a href="http://docs.docker.io/en/latest/use/builder/">full details</a></p>
+
+<ul>
+<li>FROM (select the base image)</li>
+<li>MAINTAINER (Set the author field for images)</li>
+<li>RUN (run a command, and commit)</li>
+<li>CMD (the default execution command for the container)</li>
+<li>EXPOSE (set the port to be publicly exposed)</li>
+<li>ENV (set environment variables)</li>
+<li>ADD (add files from source and copy them to the container)</li>
+<li>ENTRYPOINT (configure the container to run as an executable)</li>
+<li>VOLUME (add a volume)</li>
+<li>USER (set the user)</li>
+<li>WORKDIR (set working directory)</li>
+</ul>
 
 
-<p>Though when working with MongoDB arrays in rails and forms to edit the data, you could end up doing a bunch of controller logic and/or js logic just to get the data in.</p>
+<h3>MongoDB dockerfile</h3>
 
-<p>This is especially true if you want to just store a bunch of strings in the array. I tried many different ways of doing this, but the simplest solution with out any changes to your controller or forms is to just use a virtual attribute on your model.</p>
+<p>We create a dockerfile, and just use all the same commands we used previously <code>touch Dockerfile</code></p>
 
-<figure class='code'><figcaption><span>Post.rb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -139,51 +149,32 @@
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">Post</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="ss">Mongoid</span><span class="p">:</span><span class="ss">:Document</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>FROM ubuntu:latest
 </span><span class='line'>
-</span><span class='line'>  <span class="n">field</span> <span class="ss">:title</span><span class="p">,</span> <span class="ss">type</span><span class="p">:</span> <span class="nb">String</span>
-</span><span class='line'>  <span class="n">field</span> <span class="ss">:tags</span><span class="p">,</span> <span class="ss">type</span><span class="p">:</span> <span class="nb">Array</span><span class="p">,</span> <span class="ss">default</span><span class="p">:</span> <span class="o">[]</span>
+</span><span class='line'>RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+</span><span class='line'>RUN echo &#39;deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen&#39; | tee /etc/apt/sources.list.d/10gen.list
 </span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">tags_list</span><span class="o">=</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">arg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span> <span class="p">}</span>
-</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'>RUN dpkg-divert --local --rename --add /sbin/initctl
+</span><span class='line'>RUN ln -s /bin/true /sbin/initctl
 </span><span class='line'>
-</span><span class='line'>  <span class="k">def</span> <span class="nf">tags_list</span>
-</span><span class='line'>    <span class="nb">self</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span>
-</span><span class='line'>  <span class="k">end</span>
-</span><span class='line'><span class="k">end</span>
+</span><span class='line'>RUN apt-get update
+</span><span class='line'>RUN apt-get install mongodb-10gen
+</span><span class='line'>
+</span><span class='line'>RUN mkdir -p /data/db
+</span><span class='line'>
+</span><span class='line'>EXPOSE 27017
+</span><span class='line'>CMD [&quot;usr/bin/mongod&quot;, &quot;--smallfiles&quot;]
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Then in your view you just use tags_list:</p>
+<p>Then we issue:</p>
 
-<figure class='code'><figcaption><span>_form.html.erb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">text_field</span> <span class="ss">:tags_list</span> <span class="cp">%&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure>
+<p><code>sudo docker build -t codiez/mongodb .</code></p>
 
+<p>and start it up with&hellip;</p>
 
-<p>In the shell:</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">post</span> <span class="o">=</span> <span class="no">Post</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">post</span><span class="o">.</span><span class="n">tags_list</span> <span class="o">=</span> <span class="s1">&#39;tag1, tag2, tag3&#39;</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="s2">&quot;tag1, tag2, tag3&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">post</span><span class="o">.</span><span class="n">tags</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;Tag1&quot;</span><span class="p">,</span> <span class="s2">&quot;Tag2&quot;</span><span class="p">,</span> <span class="s2">&quot;Tag3&quot;</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Any comma seperated values entered will be stored correctly in MongoDB, you could also use this to apply any transformations to the data before it saved, i.e captilizing each value.</p>
-
-<p>We ended up using this bit of code quite often, so i extracted it out to lib, and then <a href="https://github.com/ismaild/mongoid-arraylist">packaged it into a gem</a>.</p>
+<p><code>sudo docker run -d codiez/mongodb</code></p>
 </div>
 
 
@@ -206,12 +197,12 @@
   
 
 
-<time datetime="2013-07-29T22:32:00+02:00" pubdate data-updated="true">Jul 29<span>th</span>, 2013</time>
+<time datetime="2013-09-06T15:54:00+02:00" pubdate data-updated="true">Sep 6<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/categories/mongodb/'>mongodb</a>, <a class='category' href='/categories/rails/'>rails</a>, <a class='category' href='/categories/ruby/'>ruby</a>
+    <a class='category' href='/categories/docker/'>docker</a>, <a class='category' href='/categories/mongodb/'>mongodb</a>, <a class='category' href='/categories/saas/'>saas</a>
   
 </span>
 
@@ -220,7 +211,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.codiez.co.za/2013/07/editing-mongodb-arrays-in-rails/" data-via="ismail" data-counturl="http://blog.codiez.co.za/2013/07/editing-mongodb-arrays-in-rails/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.codiez.co.za/2013/09/setup-mongodb-container-docker-file/" data-via="ismail" data-counturl="http://blog.codiez.co.za/2013/09/setup-mongodb-container-docker-file/" >Tweet</a>
   
   
   
@@ -229,8 +220,8 @@
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/2013/09/setup-a-docker-container-with-mongodb/" title="Previous Post: Setup a Docker container with MongoDB">&laquo; Setup a Docker container with MongoDB</a>
       
-        <a class="basic-alignment right" href="/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx/" title="Next Post: Uninstall MySQL & MacPorts, reinstall MySQL with Homebrew on Mac OSX">Uninstall MySQL & MacPorts, reinstall MySQL with Homebrew on Mac OSX &raquo;</a>
       
     </p>
   </footer>
@@ -382,8 +373,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://blog.codiez.co.za/2013/07/editing-mongodb-arrays-in-rails/';
-        var disqus_url = 'http://blog.codiez.co.za/2013/07/editing-mongodb-arrays-in-rails/';
+        var disqus_identifier = 'http://blog.codiez.co.za/2013/09/setup-mongodb-container-docker-file/';
+        var disqus_url = 'http://blog.codiez.co.za/2013/09/setup-mongodb-container-docker-file/';
         var disqus_script = 'embed.js';
       
     (function () {

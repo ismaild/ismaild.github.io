@@ -4,7 +4,7 @@
   <title><![CDATA[Category: docker | C{}DIEZ]]></title>
   <link href="http://blog.codiez.co.za/categories/docker/atom.xml" rel="self"/>
   <link href="http://blog.codiez.co.za/"/>
-  <updated>2013-09-04T14:28:38+02:00</updated>
+  <updated>2013-09-07T23:27:09+02:00</updated>
   <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
@@ -12,6 +12,84 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Setup a MongoDB container with a docker file]]></title>
+    <link href="http://blog.codiez.co.za/2013/09/setup-mongodb-container-docker-file/"/>
+    <updated>2013-09-06T15:54:00+02:00</updated>
+    <id>http://blog.codiez.co.za/2013/09/setup-mongodb-container-docker-file</id>
+    <content type="html"><![CDATA[<p>In our previous post we went through the steps to <a href="/2013/09/setup-a-docker-container-with-mongodb/">Setup a Docker Container With MongoDB</a> manually.</p>
+
+<p>Docker has a simple DSL that lets you automate all of these steps to make a conainer.</p>
+
+<h3>Docker file syntax</h3>
+
+<p>Every line in a docker file has the following structure: <code>INSTRUCTION arguments</code></p>
+
+<p>Comments are ignored, and the first line in the docker file should contain the command <code>FROM &lt;image</code></p>
+
+<p>Commands available <a href="http://docs.docker.io/en/latest/use/builder/">full details</a></p>
+
+<ul>
+<li>FROM (select the base image)</li>
+<li>MAINTAINER (Set the author field for images)</li>
+<li>RUN (run a command, and commit)</li>
+<li>CMD (the default execution command for the container)</li>
+<li>EXPOSE (set the port to be publicly exposed)</li>
+<li>ENV (set environment variables)</li>
+<li>ADD (add files from source and copy them to the container)</li>
+<li>ENTRYPOINT (configure the container to run as an executable)</li>
+<li>VOLUME (add a volume)</li>
+<li>USER (set the user)</li>
+<li>WORKDIR (set working directory)</li>
+</ul>
+
+
+<h3>MongoDB dockerfile</h3>
+
+<p>We create a dockerfile, and just use all the same commands we used previously <code>touch Dockerfile</code></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>FROM ubuntu:latest&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;RUN apt-key adv &amp;mdash;keyserver hkp://keyserver.ubuntu.com:80 &amp;mdash;recv 7F0CEB10
+</span><span class='line'>RUN echo &amp;lsquo;deb &lt;a href=&quot;http://downloads-distro.mongodb.org/repo/ubuntu-upstart&quot;&gt;http://downloads-distro.mongodb.org/repo/ubuntu-upstart&lt;/a&gt; dist 10gen&amp;rsquo; | tee /etc/apt/sources.list.d/10gen.list&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;RUN dpkg-divert &amp;mdash;local &amp;mdash;rename &amp;mdash;add /sbin/initctl
+</span><span class='line'>RUN ln -s /bin/true /sbin/initctl&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;RUN apt-get update
+</span><span class='line'>RUN apt-get install mongodb-10gen&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;RUN mkdir -p /data/db&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;EXPOSE 27017
+</span><span class='line'>CMD [&amp;ldquo;usr/bin/mongod&amp;rdquo;, &amp;ldquo;&amp;mdash;smallfiles&amp;rdquo;]
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Then we issue:</p>
+
+<p><code>sudo docker build -t codiez/mongodb .</code></p>
+
+<p>and start it up with&hellip;</p>
+
+<p><code>sudo docker run -d codiez/mongodb</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Setup a Docker container with MongoDB]]></title>
@@ -125,7 +203,7 @@
 </span><span class='line'>&lt;p&gt;dock@saas:~<span class="nv">$ </span>sudo docker login
 </span><span class='line'>Username: codiez
 </span><span class='line'>Password:
-</span><span class='line'>Email: &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;&amp;#109;&amp;#97;&amp;#105;&amp;#108;&amp;#x74;&amp;#x6f;&amp;#x3a;&amp;#105;&amp;#115;&amp;#109;&amp;#97;&amp;#105;&amp;#108;&amp;#x40;&amp;#x63;&amp;#111;&amp;#100;&amp;#x69;&amp;#x65;&amp;#x7a;&amp;#x2e;&amp;#99;&amp;#111;&amp;#x2e;&amp;#x7a;&amp;#97;&quot;</span>&gt;&amp;#x69;&amp;#x73;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#x6c;&amp;#x40;&amp;#x63;&amp;#x6f;&amp;#100;&amp;#x69;&amp;#x65;&amp;#122;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#46;&amp;#122;&amp;#97;&lt;/a&gt;
+</span><span class='line'>Email: &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;&amp;#109;&amp;#97;&amp;#105;&amp;#108;&amp;#x74;&amp;#111;&amp;#58;&amp;#105;&amp;#x73;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#108;&amp;#64;&amp;#x63;&amp;#x6f;&amp;#100;&amp;#x69;&amp;#101;&amp;#122;&amp;#46;&amp;#99;&amp;#111;&amp;#46;&amp;#x7a;&amp;#97;&quot;</span>&gt;&amp;#x69;&amp;#115;&amp;#109;&amp;#x61;&amp;#105;&amp;#x6c;&amp;#x40;&amp;#99;&amp;#x6f;&amp;#100;&amp;#105;&amp;#x65;&amp;#122;&amp;#46;&amp;#x63;&amp;#111;&amp;#x2e;&amp;#x7a;&amp;#x61;&lt;/a&gt;
 </span><span class='line'>Login Succeeded
 </span><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker push codiez/mongodb
 </span><span class='line'>The push refers to a repository <span class="o">[</span>codiez/mongodb<span class="o">]</span> <span class="o">(</span>len: 1<span class="o">)</span>
