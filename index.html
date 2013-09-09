@@ -348,7 +348,7 @@
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker ps
 </span><span class='line'>ID                  IMAGE                   COMMAND             CREATED             STATUS              PORTS
-</span><span class='line'>a02d24fed142        codiez/mongodb:latest   /usr/bin/mongod     5 seconds ago       Up 4 seconds        49157-&gt;27017
+</span><span class='line'>a1f0680f8458        codiez/mongodb:latest   /usr/bin/mongod     5 seconds ago       Up 4 seconds        49157-&gt;27017
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -374,6 +374,15 @@
 </span><span class='line'>&gt; db.posts.find<span class="o">()</span>
 </span><span class='line'><span class="o">{</span> <span class="s2">&quot;_id&quot;</span> : ObjectId<span class="o">(</span><span class="s2">&quot;5227058d112c68baaa3b94d9&quot;</span><span class="o">)</span>, <span class="s2">&quot;title&quot;</span> : <span class="s2">&quot;Hello MongoDB in Docker&quot;</span> <span class="o">}</span>
 </span><span class='line'>&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><em>Update</em>: Stop the container and restart it since we do not want to commit with the test data.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker stop a1f0680f8458
+</span><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker run -d -p 27017 codiez/mongodb /usr/bin/mongod --smallfiles
 </span></code></pre></td></tr></table></div></figure>
 
 
