@@ -59,3 +59,5 @@ Then we issue:
 and start it up with...
 
 `sudo docker run -d codiez/mongodb`
+
+In the next post, we will discuss creating a SAAS database service using docker and mongodb. 
