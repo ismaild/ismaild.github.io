@@ -96,7 +96,7 @@ Check that the container is running and get the port:
 {% codeblock lang:bash %}
 dock@saas:~$ sudo docker ps
 ID                  IMAGE                   COMMAND             CREATED             STATUS              PORTS
-a02d24fed142        codiez/mongodb:latest   /usr/bin/mongod     5 seconds ago       Up 4 seconds        49157->27017     
+a1f0680f8458        codiez/mongodb:latest   /usr/bin/mongod     5 seconds ago       Up 4 seconds        49157->27017     
 {% endcodeblock %}
 
 
@@ -115,6 +115,14 @@ test
 { "_id" : ObjectId("5227058d112c68baaa3b94d9"), "title" : "Hello MongoDB in Docker" }
 > 
 {% endcodeblock %}
+
+*Update*: Stop the container and restart it since we do not want to commit with the test data.
+
+{% codeblock lang:bash %}
+dock@saas:~$ sudo docker stop a1f0680f8458
+dock@saas:~$ sudo docker run -d -p 27017 codiez/mongodb /usr/bin/mongod --smallfiles
+{% endcodeblock %}
+
 
 One final commit to save the command and port mapping. Also notice you do not have to enter in the entire container id when running commands, just the first few characters. 
 
