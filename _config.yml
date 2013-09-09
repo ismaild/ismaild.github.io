@@ -101,3 +101,6 @@ facebook_like: false
 
 # coderwall
 coderwall_user: ismail
+
+# hacker news like button
+hn_like_button: true
