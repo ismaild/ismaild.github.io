@@ -135,6 +135,6 @@ dock@saas:~$ sudo docker commit -run '{"Cmd": ["/usr/bin/mongod", "--smallfiles"
 
 Now that we have an image, we can run `docker pull codiez/mongodb` to grab the container and run it with `docker run -d codiez/mongodb`
 
-The next post will discuss automating the creation of a container with a dockerfile.
+The next post will discuss [automating the creation of a container with a dockerfile](/2013/09/setup-mongodb-container-docker-file/).
 
 
