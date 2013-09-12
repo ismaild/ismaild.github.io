@@ -3,7 +3,7 @@ layout: post
 title: "Uninstall MySQL & MacPorts, reinstall MySQL with Homebrew on Mac OSX"
 date: 2013-08-27 08:58
 comments: true
-categories: [mysql, homebrew]
+categories: [mysql, homebrew, mac]
 keywords: "mysql, homebrew"
 description: "Uninstall mysql on mac osx, and reinstall with home brew"
 ---
