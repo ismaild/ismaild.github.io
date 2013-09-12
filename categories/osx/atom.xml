@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: ruby | CODIEZ]]></title>
-  <link href="http://blog.codiez.co.za/categories/ruby/atom.xml" rel="self"/>
+  <title><![CDATA[Category: osx | CODIEZ]]></title>
+  <link href="http://blog.codiez.co.za/categories/osx/atom.xml" rel="self"/>
   <link href="http://blog.codiez.co.za/"/>
   <updated>2013-09-12T11:03:48+02:00</updated>
   <id>http://blog.codiez.co.za/</id>
@@ -253,31 +253,23 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Editing MongoDB Arrays in Rails]]></title>
-    <link href="http://blog.codiez.co.za/2013/07/editing-mongodb-arrays-in-rails/"/>
-    <updated>2013-07-29T22:32:00+02:00</updated>
-    <id>http://blog.codiez.co.za/2013/07/editing-mongodb-arrays-in-rails</id>
-    <content type="html"><![CDATA[<p>One of the awesome features of MongoDB is the ability to store arrays directly in your documents, which maps directly with ruby/python/js arrays etc.</p>
+    <title type="html"><![CDATA[Uninstall MySQL & MacPorts, reinstall MySQL with Homebrew on Mac OSX]]></title>
+    <link href="http://blog.codiez.co.za/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx/"/>
+    <updated>2013-08-27T08:58:00+02:00</updated>
+    <id>http://blog.codiez.co.za/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx</id>
+    <content type="html"><![CDATA[<p>I have recently have to set up my dev environment once again, which can be quite a bit of a pain, especially if you do not have something like <a href="http://boxen.github.com/">boxen</a>.</p>
 
-<p>An example Post model:</p>
+<p>This time however i decided to avoid macports all together, one of the &ldquo;benefits&rdquo; of macports over homebrew is the ability to run different versions since macports will install into /opt , though its a feature i never used, and i have had a bunch of strange build incompatabilities that has taken me quite a bit of time to debug.</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>data.json </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='json'><span class='line'><span class="p">{</span>
-</span><span class='line'>  <span class="err">title:</span> <span class="err">&amp;lsquo;Editing</span> <span class="err">MongoDB</span> <span class="err">Arrays</span> <span class="err">in</span> <span class="err">Rails&amp;rsquo;</span>
-</span><span class='line'>  <span class="err">tags:</span> <span class="err">[&amp;lsquo;ruby&amp;rsquo;,</span> <span class="err">&amp;lsquo;rails&amp;rsquo;,</span> <span class="err">&amp;lsquo;mongodb&amp;rsquo;]</span>
-</span><span class='line'><span class="p">}</span>
+<p>Here are the steps</p>
+
+<h2>Uninstall macports</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo port -fp uninstall &amp;mdash;follow-dependents installed
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>Though when working with MongoDB arrays in rails and forms to edit the data, you could end up doing a bunch of controller logic and/or js logic just to get the data in.</p>
-
-<p>This is especially true if you want to just store a bunch of strings in the array. I tried many different ways of doing this, but the simplest solution with out any changes to your controller or forms is to just use a virtual attribute on your model.</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>Post.rb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -287,46 +279,27 @@
 <span class='line-number'>8</span>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='rb'><span class='line'><span class="k">class</span> <span class="nc">Post</span>
-</span><span class='line'>  <span class="kp">include</span> <span class="ss">Mongoid</span><span class="p">:</span><span class="ss">:Document</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;  field :title, type: String</span>
-</span><span class='line'><span class="sr">  field :tags, type: Array, default: []&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">def</span> <span class="nf">tags_list</span><span class="o">=</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;self.tags = arg.split(&#39;,&#39;).map { |v| v.strip }</span>
-</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;  end&lt;/</span><span class="nb">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="nb">p</span><span class="o">&gt;</span>  <span class="k">def</span> <span class="nf">tags_list</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;pre&gt;&lt;code&gt;self.tags.join(&#39;, &#39;)</span>
-</span><span class='line'><span class="sr">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;</span><span class="sr">/pre&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;  end</span>
-</span><span class='line'><span class="sr">end</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo rm -rf /opt/local
+</span><span class='line'>sudo rm -rf /Applications/DarwinPorts
+</span><span class='line'>sudo rm -rf /Applications/MacPorts
+</span><span class='line'>sudo rm -rf /Library/LaunchDaemons/org.macports.&lt;em&gt;
+</span><span class='line'>sudo rm -rf /Library/Receipts/DarwinPorts&lt;/em&gt;.pkg
+</span><span class='line'>sudo rm -rf /Library/Receipts/MacPorts*.pkg
+</span><span class='line'>sudo rm -rf /Library/StartupItems/DarwinPortsStartup
+</span><span class='line'>sudo rm -rf /Library/Tcl/darwinports1.0
+</span><span class='line'>sudo rm -rf /Library/Tcl/macports1.0
+</span><span class='line'>sudo rm -rf ~/.macports
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>Then in your view you just use tags_list:</p>
+<h2>Uninstall MySQL</h2>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>_form.html.erb </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='erb'><span class='line'><span class="x">&amp;lt;%= f.text_field :tags_list </span><span class="err">%&gt;</span><span class="x"></span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+<ol>
+<li>Backup any databases you have using mysqldump</li>
+<li>Stop MySQL if it is currently running, under settings > mysql</li>
+</ol>
 
-<p>In the shell:</p>
+
+<p>and then run:</p>
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -334,17 +307,33 @@
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">post</span> <span class="o">=</span> <span class="no">Post</span><span class="o">.</span><span class="n">new</span>
-</span><span class='line'><span class="n">post</span><span class="o">.</span><span class="n">tags_list</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">tag1</span><span class="p">,</span> <span class="n">tag2</span><span class="p">,</span> <span class="n">tag3</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span>
-</span><span class='line'><span class="o">=&gt;</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="n">tag1</span><span class="p">,</span> <span class="n">tag2</span><span class="p">,</span> <span class="n">tag3</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;</span><span class="sr">/p&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="sr">&lt;p&gt;post.tags</span>
-</span><span class='line'><span class="sr">=&gt; [&amp;ldquo;Tag1&amp;rdquo;, &amp;ldquo;Tag2&amp;rdquo;, &amp;ldquo;Tag3&amp;rdquo;]&lt;br/</span><span class="o">&gt;</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sudo rm /usr/local/mysql
+</span><span class='line'>sudo rm -rf /usr/local/mysql&lt;em&gt;
+</span><span class='line'>sudo rm -rf /Library/StartupItems/MySQLCOM
+</span><span class='line'>sudo rm -rf /Library/PreferencePanes/My&lt;/em&gt;
+</span><span class='line'>sudo rm -rf /Library/Receipts/mysql&lt;em&gt;
+</span><span class='line'>sudo rm -rf /Library/Receipts/MySQL&lt;/em&gt;
+</span><span class='line'>sudo rm -rf /private/var/db/receipts/&lt;em&gt;mysql&lt;/em&gt;
+</span><span class='line'>rm -rf ~/Library/PreferencePanes/My*
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
-<p>Any comma seperated values entered will be stored correctly in MongoDB, you could also use this to apply any transformations to the data before it saved, i.e captilizing each value.</p>
+<p>You may also need to edit <code>/etc/hostconfig</code> and remove the line <code>MYSQLCOM=-YES-</code></p>
 
-<p>We ended up using this bit of code quite often, so i extracted it out to lib, and then <a href="https://github.com/ismaild/mongoid-arraylist">packaged it into a gem</a>.</p>
+<h2>Install Homebrew &amp; MySQL</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>ruby -e &amp;ldquo;<span class="k">$(</span>curl -fsSL &lt;a <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;https://raw.github.com/mxcl/homebrew/go&quot;</span>&gt;https://raw.github.com/mxcl/homebrew/go&lt;/a&gt;<span class="k">)</span>&amp;rdquo;
+</span><span class='line'>brew install mysql
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>Welcome to <a href="http://www.youtube.com/watch?v=hNVu55ZyC-Y&amp;list=PL7AD6AA21F4F0E76E">nirvana</a></p>
+
+<p>:)</p>
+
+<p>Seriously, i have not yet had any compatibility or weird build errors with homebrew.</p>
 ]]></content>
   </entry>
   

@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Setup a Docker container with MongoDB - CODIEZ</title>
+  <title>Setup Oracle instant client and ruby oci8 gem on Mac - CODIEZ</title>
   <meta name="author" content="Ismail Dhorat">
 
   
-  <meta name="description" content="Setup MongoDB in a docker container">
-  <meta name="keywords" content="docker, mongodb, saas">
+  <meta name="description" content="Setup Oracle instant client on Mac OsX and ruby oci8 gem">
+  <meta name="keywords" content="oracle, osx">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb">
+  <link rel="canonical" href="http://blog.codiez.co.za/2013/09/setup-oracle-instant-client-ruby-oci8-gem-mac">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="CODIEZ" type="application/atom+xml">
@@ -81,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">Setup a Docker Container With MongoDB</h1>
+      <h1 class="entry-title">Setup Oracle Instant Client and Ruby Oci8 Gem on Mac</h1>
     
     
       <p class="meta">
@@ -97,16 +97,35 @@
   
 
 
-<time datetime="2013-09-04T09:09:00+02:00" pubdate data-updated="true">Sep 4<span>th</span>, 2013</time>
+<time datetime="2013-09-12T22:17:00+02:00" pubdate data-updated="true">Sep 12<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>If you have not yet setup docker, follow the <a href="/2013/09/hello-docker/">install docker</a> post before this.</p>
+<div class="entry-content"><p>Recently i have had to get my dev environment setup to connect to oracle for a project.</p>
 
-<p>First, lets take a look at what docker images we have.</p>
+<p>Getting the client setup can sometimes be a real pain with a Mac. Oracle does provide client libraries but they are painfully slow in updating them and fixing bugs. There was an <a href="https://forums.oracle.com/thread/2320019?start=0&amp;tstart=0">outstanding segmentation fault bug for over 2 years</a>.</p>
+
+<p>Here are the steps to get it setup on Mac, and it would probably work for ubuntu etc, just have not tested it.</p>
+
+<p>First grab the 64 bit client from:</p>
+
+<p><a href="http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html">http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html</a></p>
+
+<p>You need:</p>
+
+<ul>
+<li>instantclient-basic-macos.x64-11.2.0.3.0.zip</li>
+<li>instantclient-sqlplus-macos.x64-11.2.0.3.0.zip</li>
+<li>instantclient-sdk-macos.x64-11.2.0.3.0.zip</li>
+</ul>
+
+
+<p>You can also grab the lite version, if you do not need any translations.</p>
+
+<p>Unzip the files:</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -115,32 +134,40 @@
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker images
-</span><span class='line'>REPOSITORY          TAG                 ID                  CREATED             SIZE
-</span><span class='line'>ubuntu              12.04               8dbd9e392a96        4 months ago        131.5 MB <span class="o">(</span>virtual 131.5 MB<span class="o">)</span>
-</span><span class='line'>ubuntu              12.10               b750fe79269d        5 months ago        24.65 kB <span class="o">(</span>virtual 180.1 MB<span class="o">)</span>
-</span><span class='line'>ubuntu              latest              8dbd9e392a96        4 months ago        131.5 MB <span class="o">(</span>virtual 131.5 MB<span class="o">)</span>
-</span><span class='line'>ubuntu              precise             8dbd9e392a96        4 months ago        131.5 MB <span class="o">(</span>virtual 131.5 MB<span class="o">)</span>
-</span><span class='line'>ubuntu              quantal             b750fe79269d        5 months ago        24.65 kB <span class="o">(</span>virtual 180.1 MB<span class="o">)</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/Downloads
+</span><span class='line'><span class="c">#basic</span>
+</span><span class='line'>unzip -qq instantclient-basic-macos.x64-11.2.0.3.0.zip
+</span><span class='line'>
+</span><span class='line'><span class="c">#lite</span>
+</span><span class='line'>unzip -qq instantclient-basiclite-macos.x64-11.2.0.3.0.zip
+</span><span class='line'>
+</span><span class='line'>unzip -qq instantclient-sqlplus-macos.x64-11.2.0.3.0.zip
+</span><span class='line'>
+</span><span class='line'>unzip -qq instantclient-sdk-macos.x64-11.2.0.3.0.zip
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Notice we have the images locally, so if we run the hello world the command runs instantly, without the need to download images again.</p>
-
-<p>Now, lets check if we have and docker containers running:</p>
+<h2>Move files</h2>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker ps
-</span><span class='line'>ID                  IMAGE               COMMAND             CREATED             STATUS              PORTS
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>instantclient_11_2
+</span><span class='line'>mkdir -p /usr/local/oracle/product/instantclient_64/11.2.0.3.0/bin
+</span><span class='line'>mkdir -p /usr/local/oracle/product/instantclient_64/11.2.0.3.0/lib
+</span><span class='line'>mkdir -p /usr/local/oracle/product/instantclient_64/11.2.0.3.0/jdbc/lib
+</span><span class='line'>mkdir -p /usr/local/oracle/product/instantclient_64/11.2.0.3.0/rdbms/jlib
+</span><span class='line'>mkdir -p /usr/local/oracle/product/instantclient_64/11.2.0.3.0/sqlplus/admin
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>As expected, we do not have any containers currently running.</p>
 
-<h2>Install MongoDB</h2>
-
-<p>Start an interactive shell in a container with: <code>sudo docker run -i -t ubuntu /bin/bash</code></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -154,42 +181,85 @@
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>root@f9d75a04ce10:/# apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mv ojdbc* /usr/local/oracle/product/instantclient_64/11.2.0.3.0/jdbc/lib/
+</span><span class='line'>mv x*.jar /usr/local/oracle/product/instantclient_64/11.2.0.3.0/rdbms/jlib/
 </span><span class='line'>
-</span><span class='line'>root@f9d75a04ce10:/# <span class="nb">echo</span> <span class="s1">&#39;deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen&#39;</span> | tee /etc/apt/sources.list.d/10gen.list
+</span><span class='line'><span class="c"># rename glogin.sql to login.sql</span>
+</span><span class='line'>mv glogin.sql /usr/local/oracle/product/instantclient_64/11.2.0.3.0/sqlplus/admin/login.sql
 </span><span class='line'>
-</span><span class='line'>root@f9d75a04ce10:/# apt-get update
+</span><span class='line'><span class="c"># Move lib &amp; sdk</span>
+</span><span class='line'>mv *dylib* /usr/local/oracle/product/instantclient_64/11.2.0.3.0/lib/
+</span><span class='line'>mv sdk /usr/local/oracle/product/instantclient_64/11.2.0.3.0/lib/sdk
 </span><span class='line'>
-</span><span class='line'><span class="c"># initctl fix</span>
-</span><span class='line'>root@a1f0680f8458:/# dpkg-divert --local --rename --add /sbin/initctl
-</span><span class='line'>
-</span><span class='line'>root@a1f0680f8458:/# ln -s /bin/true /sbin/initctl
-</span><span class='line'>
-</span><span class='line'>root@a1f0680f8458:/# apt-get install mongodb-10gen
-</span><span class='line'>
-</span><span class='line'>root@a1f0680f8458:/# mkdir -p /data/db
-</span><span class='line'>
-</span><span class='line'>root@a1f0680f8458:/# mongod
-</span><span class='line'>mongod --help <span class="k">for </span><span class="nb">help </span>and startup options
-</span><span class='line'>Tue Sep  3 14:10:36.469 <span class="o">[</span>initandlisten<span class="o">]</span> MongoDB starting : <span class="nv">pid</span><span class="o">=</span>125 <span class="nv">port</span><span class="o">=</span>27017 <span class="nv">dbpath</span><span class="o">=</span>/data/db/ 64-bit <span class="nv">host</span><span class="o">=</span>a1f0680f8458
-</span><span class='line'>
-</span><span class='line'><span class="nb">exit</span>
+</span><span class='line'>mv *README /usr/local/oracle/product/instantclient_64/11.2.0.3.0/
+</span><span class='line'>mv * /usr/local/oracle/product/instantclient_64/11.2.0.3.0/bin/
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>MongoDB starts succesfully in the container. Now we need to commit the container, to save the state and push to the docker index.</p>
+<h2>Setup TNS Names</h2>
 
-<p><code>sudo docker commit a1f0680f8458 codiez/mongodb</code></p>
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /usr/local/admin/network
+</span><span class='line'>touch /usr/local/admin/network/tnsnames.ora
+</span></code></pre></td></tr></table></div></figure>
 
-<p>Remember to replace your container id, mine was <code>a1f0680f8458</code> which you can see at the prompt, and your <code>&lt;username&gt;/&lt;container_name&gt;</code></p>
+
+<p>Put in your tnsnames, example:</p>
+
+<figure class='code'><figcaption><span>tnsnames.ora </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'> ORADEMO=
+</span><span class='line'> (description=
+</span><span class='line'>   (address_list=
+</span><span class='line'>     (address = (protocol = TCP)(host = 127.0.0.1)(port = 1521))
+</span><span class='line'>   )
+</span><span class='line'> (connect_data =
+</span><span class='line'>   (service_name=orademo)
+</span><span class='line'> )
+</span><span class='line'>)
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Setup your environment</h2>
+
+<p>Create a file to store your oracle client environment variables with <code>touch ~/.oracle_client</code></p>
+
+<p>Add the following to it:</p>
+
+<figure class='code'><figcaption><span>.oracle_client </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export ORACLE_BASE=/usr/local/oracle
+</span><span class='line'>export ORACLE_HOME=$ORACLE_BASE/product/instantclient_64/11.2.0.3.0
+</span><span class='line'>export PATH=$ORACLE_HOME/bin:$PATH
+</span><span class='line'>export DYLD_LIBRARY_PATH=$ORACLE_HOME/lib:$DYLD_LIBRARY_PATH
+</span><span class='line'>export TNS_ADMIN=$ORACLE_BASE/admin/network</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then run:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>echo &quot;source ~/.oracle_client&quot; &gt;&gt; ~/.bash_profile
+</span><span class='line'>source ~/.bash_profile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Which will add the environment variables to your <code>.bash_profile</code>, You can also find this in my <a href="https://github.com/ismaild/dotfiles">dotfiles</a></p>
+
+<h2>Test Sql*Plus works</h2>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -203,49 +273,41 @@
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 <span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker commit a1f0680f8458 codiez/mongodb
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sqlplus user/pass@orademo
 </span><span class='line'>
-</span><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker login
-</span><span class='line'>Username: codiez
-</span><span class='line'>Password:
-</span><span class='line'>Email: ismail@codiez.co.za
-</span><span class='line'>Login Succeeded
-</span><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker push codiez/mongodb
-</span><span class='line'>The push refers to a repository <span class="o">[</span>codiez/mongodb<span class="o">]</span> <span class="o">(</span>len: 1<span class="o">)</span>
-</span><span class='line'>Processing checksums
-</span><span class='line'>Sending image list
-</span><span class='line'>Pushing repository codiez/mongodb <span class="o">(</span>1 tags<span class="o">)</span>
-</span><span class='line'>Pushing 8dbd9e392a964056420e5d58ca5cc376ef18e2de93b5cc90e868a1bbc8318c1c
-</span><span class='line'>Image 8dbd9e392a964056420e5d58ca5cc376ef18e2de93b5cc90e868a1bbc8318c1c already pushed, skipping
-</span><span class='line'>Pushing tags <span class="k">for </span>rev <span class="o">[</span>8dbd9e392a964056420e5d58ca5cc376ef18e2de93b5cc90e868a1bbc8318c1c<span class="o">]</span> on <span class="o">{</span>https://registry-1.docker.io/v1/repositories/codiez/mongodb/tags/latest<span class="o">}</span>
-</span><span class='line'>Pushing f0ab8043e4e8135379d35410a4847769efb9245d8d4817cb24a2196c434c8506
+</span><span class='line'>SQL*Plus: Release 11.2.0.3.0 Production on Thu Sep 12 09:19:55 2013
+</span><span class='line'>
+</span><span class='line'>Copyright <span class="o">(</span>c<span class="o">)</span> 1982, 2012, Oracle.  All rights reserved.
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>Connected to:
+</span><span class='line'>Oracle Database 11g Enterprise Edition Release 11.2.0.2.0 - 64bit Production
+</span><span class='line'>With the Partitioning, OLAP, Data Mining and Real Application Testing options
+</span><span class='line'>
+</span><span class='line'>SQL&gt; <span class="k">select </span>table_name from user_tables;
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Once that completes, we can start MongoDB in the container, and map it to a port by running:</p>
+<p>You could also store multiple versions of the client, with different <code>.oracle_client</code> files, with a small shell script you could switch between different versions (i.e like when oracle does not fix a bug for 2 years! )</p>
 
-<p><code>sudo docker run -d -p 27017 codiez/mongodb /usr/bin/mongod --smallfiles</code></p>
-
-<p>This basically runs the container, based on the <code>codiez/mongodb</code> image, with the command <code>/usr/bin/mongod</code> and maps the default mongodb port 27017 to an external port.</p>
-
-<p>Check that the container is running and get the port:</p>
+<h2>Install Ruby oci gem</h2>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker ps
-</span><span class='line'>ID                  IMAGE                   COMMAND             CREATED             STATUS              PORTS
-</span><span class='line'>a1f0680f8458        codiez/mongodb:latest   /usr/bin/mongod     5 seconds ago       Up 4 seconds        49157-&gt;27017
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> /usr/local/oracle/product/instantclient_64/11.2.0.3.0/lib
+</span><span class='line'>ln -s libclntsh.dylib.11.1 libclntsh.dylib
+</span><span class='line'>ln -s libocci.dylib.11.1 libocci.dylib
+</span><span class='line'>
+</span><span class='line'><span class="c"># Make sure sdk directory is in /usr/local/oracle/product/instantclient_64/11.2.0.3.0/lib</span>
+</span><span class='line'>gem install ruby-oci8
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>You can also inspect the image to grab the port by running <code>sudo docker inspect container_id</code></p>
-
-<p>Now, we can test an external connection to MongoDB, test from your local machine and connect to the VM IP with the port for your container:</p>
+<p>Test that it works&hellip;</p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -255,44 +317,20 @@
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mongo 192.168.0.21:49157
-</span><span class='line'>MongoDB shell version: 2.4.5
-</span><span class='line'>connecting to: 192.168.0.21:49157/test
-</span><span class='line'>&gt; db
-</span><span class='line'><span class="nb">test</span>
-</span><span class='line'>&gt; db.posts.insert<span class="o">({</span>title:<span class="s2">&quot;Hello MongoDB in Docker&quot;</span><span class="o">})</span>
-</span><span class='line'>&gt; db.posts.find<span class="o">()</span>
-</span><span class='line'><span class="o">{</span> <span class="s2">&quot;_id&quot;</span> : ObjectId<span class="o">(</span><span class="s2">&quot;5227058d112c68baaa3b94d9&quot;</span><span class="o">)</span>, <span class="s2">&quot;title&quot;</span> : <span class="s2">&quot;Hello MongoDB in Docker&quot;</span> <span class="o">}</span>
-</span><span class='line'>&gt;
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">irb</span>
+</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;oci8</span>
+</span><span class='line'><span class="s1">irb(main):006:0&gt; o = OCI8.new(&#39;</span><span class="n">user</span><span class="s1">&#39;,&#39;</span><span class="n">pass</span><span class="s1">&#39;,&#39;</span><span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="o">/</span><span class="n">orademo</span><span class="s1">&#39;)</span>
+</span><span class='line'><span class="s1">=&gt; #&lt;OCI8:user&gt;</span>
+</span><span class='line'><span class="s1">irb(main):011:0&gt; o.exec(&#39;</span><span class="nb">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">dual</span><span class="s1">&#39;) do |r| puts r.join(&#39;</span><span class="p">,</span><span class="err">&#39;</span><span class="p">);</span> <span class="k">end</span>
+</span><span class='line'><span class="n">X</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="mi">1</span>
+</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">012</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">exit</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><em>Update</em>: Stop the container and restart it since we do not want to commit with the test data.</p>
+<p>If you have issues connecting with an SID or Service Name, try using the IP.</p>
 
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker stop a1f0680f8458
-</span><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker run -d -p 27017 codiez/mongodb /usr/bin/mongod --smallfiles
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>One final commit to save the command and port mapping. Also notice you do not have to enter in the entire container id when running commands, just the first few characters.</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker ps
-</span><span class='line'>ID                  IMAGE                   COMMAND                CREATED             STATUS              PORTS
-</span><span class='line'>298a43e2f98e        codiez/mongodb:latest   /usr/bin/mongod --sm   35 seconds ago      Up 34 seconds       49164-&gt;27017
-</span><span class='line'>dock@saas:~<span class="nv">$ </span>sudo docker commit -run <span class="s1">&#39;{&quot;Cmd&quot;: [&quot;/usr/bin/mongod&quot;, &quot;--smallfiles&quot;], &quot;PortSpecs&quot;: [&quot;:27017&quot;]}&#39;</span> 298a4 codiez/mongodb
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now that we have an image, we can run <code>docker pull codiez/mongodb</code> to grab the container and run it with <code>docker run -d codiez/mongodb</code></p>
-
-<p>The next post will discuss <a href="/2013/09/setup-mongodb-container-docker-file/">automating the creation of a container with a dockerfile</a>.</p>
+<p>You now have a working oracle database client, and can connect to it from ruby.</p>
 </div>
 
 
@@ -315,12 +353,12 @@
   
 
 
-<time datetime="2013-09-04T09:09:00+02:00" pubdate data-updated="true">Sep 4<span>th</span>, 2013</time>
+<time datetime="2013-09-12T22:17:00+02:00" pubdate data-updated="true">Sep 12<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/categories/docker/'>docker</a>, <a class='category' href='/categories/mongodb/'>mongodb</a>, <a class='category' href='/categories/saas/'>saas</a>
+    <a class='category' href='/categories/oci/'>oci</a>, <a class='category' href='/categories/oracle/'>oracle</a>, <a class='category' href='/categories/osx/'>osx</a>, <a class='category' href='/categories/ruby/'>ruby</a>
   
 </span>
 
@@ -329,7 +367,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb/" data-via="ismail" data-counturl="http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.codiez.co.za/2013/09/setup-oracle-instant-client-ruby-oci8-gem-mac/" data-via="ismail" data-counturl="http://blog.codiez.co.za/2013/09/setup-oracle-instant-client-ruby-oci8-gem-mac/" >Tweet</a>
   
   
   
@@ -338,10 +376,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/2013/09/hello-docker/" title="Previous Post: Hello docker">&laquo; Hello docker</a>
+        <a class="basic-alignment left" href="/2013/09/setup-mongodb-container-docker-file/" title="Previous Post: Setup a MongoDB container with a docker file">&laquo; Setup a MongoDB container with a docker file</a>
       
-      
-        <a class="basic-alignment right" href="/2013/09/setup-mongodb-container-docker-file/" title="Next Post: Setup a MongoDB container with a docker file">Setup a MongoDB container with a docker file &raquo;</a>
       
     </p>
   </footer>
@@ -493,8 +529,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb/';
-        var disqus_url = 'http://blog.codiez.co.za/2013/09/setup-a-docker-container-with-mongodb/';
+        var disqus_identifier = 'http://blog.codiez.co.za/2013/09/setup-oracle-instant-client-ruby-oci8-gem-mac/';
+        var disqus_url = 'http://blog.codiez.co.za/2013/09/setup-oracle-instant-client-ruby-oci8-gem-mac/';
         var disqus_script = 'embed.js';
       
     (function () {
@@ -533,7 +569,7 @@
       hn_like.src = "http://hnlike.com/upvote.php?link="
                     + encodeURIComponent(document.location)
                     + "&title="
-                    + encodeURIComponent("Setup a Docker container with MongoDB");
+                    + encodeURIComponent("Setup Oracle instant client and ruby oci8 gem on Mac");
       hn_like.innerHTML="iframes not supported by your browser";
       var twitter = document.getElementsByClassName("twitter-share-button")[0];
 

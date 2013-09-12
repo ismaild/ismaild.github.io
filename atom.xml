@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[C{}DIEZ]]></title>
+  <title><![CDATA[CODIEZ]]></title>
   <link href="http://blog.codiez.co.za/atom.xml" rel="self"/>
   <link href="http://blog.codiez.co.za/"/>
-  <updated>2013-09-09T22:22:08+02:00</updated>
+  <updated>2013-09-12T11:03:48+02:00</updated>
   <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
@@ -12,6 +12,241 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Setup Oracle instant client and ruby oci8 gem on Mac]]></title>
+    <link href="http://blog.codiez.co.za/2013/09/setup-oracle-instant-client-ruby-oci8-gem-mac/"/>
+    <updated>2013-09-12T22:17:00+02:00</updated>
+    <id>http://blog.codiez.co.za/2013/09/setup-oracle-instant-client-ruby-oci8-gem-mac</id>
+    <content type="html"><![CDATA[<p>Recently i have had to get my dev environment setup to connect to oracle for a project.</p>
+
+<p>Getting the client setup can sometimes be a real pain with a Mac. Oracle does provide client libraries but they are painfully slow in updating them and fixing bugs. There was an <a href="https://forums.oracle.com/thread/2320019?start=0&amp;tstart=0">outstanding segmentation fault bug for over 2 years</a>.</p>
+
+<p>Here are the steps to get it setup on Mac, and it would probably work for ubuntu etc, just have not tested it.</p>
+
+<p>First grab the 64 bit client from:</p>
+
+<p><a href="http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html">http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html</a></p>
+
+<p>You need:</p>
+
+<ul>
+<li>instantclient-basic-macos.x64-11.2.0.3.0.zip</li>
+<li>instantclient-sqlplus-macos.x64-11.2.0.3.0.zip</li>
+<li>instantclient-sdk-macos.x64-11.2.0.3.0.zip</li>
+</ul>
+
+
+<p>You can also grab the lite version, if you do not need any translations.</p>
+
+<p>Unzip the files:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> ~/Downloads
+</span><span class='line'><span class="c">#basic</span>
+</span><span class='line'>unzip -qq instantclient-basic-macos.x64-11.2.0.3.0.zip
+</span><span class='line'>
+</span><span class='line'><span class="c">#lite</span>
+</span><span class='line'>unzip -qq instantclient-basiclite-macos.x64-11.2.0.3.0.zip
+</span><span class='line'>
+</span><span class='line'>unzip -qq instantclient-sqlplus-macos.x64-11.2.0.3.0.zip
+</span><span class='line'>
+</span><span class='line'>unzip -qq instantclient-sdk-macos.x64-11.2.0.3.0.zip
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Move files</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>instantclient_11_2
+</span><span class='line'>mkdir -p /usr/local/oracle/product/instantclient_64/11.2.0.3.0/bin
+</span><span class='line'>mkdir -p /usr/local/oracle/product/instantclient_64/11.2.0.3.0/lib
+</span><span class='line'>mkdir -p /usr/local/oracle/product/instantclient_64/11.2.0.3.0/jdbc/lib
+</span><span class='line'>mkdir -p /usr/local/oracle/product/instantclient_64/11.2.0.3.0/rdbms/jlib
+</span><span class='line'>mkdir -p /usr/local/oracle/product/instantclient_64/11.2.0.3.0/sqlplus/admin
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mv ojdbc* /usr/local/oracle/product/instantclient_64/11.2.0.3.0/jdbc/lib/
+</span><span class='line'>mv x*.jar /usr/local/oracle/product/instantclient_64/11.2.0.3.0/rdbms/jlib/
+</span><span class='line'>
+</span><span class='line'><span class="c"># rename glogin.sql to login.sql</span>
+</span><span class='line'>mv glogin.sql /usr/local/oracle/product/instantclient_64/11.2.0.3.0/sqlplus/admin/login.sql
+</span><span class='line'>
+</span><span class='line'><span class="c"># Move lib &amp; sdk</span>
+</span><span class='line'>mv *dylib* /usr/local/oracle/product/instantclient_64/11.2.0.3.0/lib/
+</span><span class='line'>mv sdk /usr/local/oracle/product/instantclient_64/11.2.0.3.0/lib/sdk
+</span><span class='line'>
+</span><span class='line'>mv *README /usr/local/oracle/product/instantclient_64/11.2.0.3.0/
+</span><span class='line'>mv * /usr/local/oracle/product/instantclient_64/11.2.0.3.0/bin/
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Setup TNS Names</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /usr/local/admin/network
+</span><span class='line'>touch /usr/local/admin/network/tnsnames.ora
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Put in your tnsnames, example:</p>
+
+<figure class='code'><figcaption><span>tnsnames.ora </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'> ORADEMO=
+</span><span class='line'> (description=
+</span><span class='line'>   (address_list=
+</span><span class='line'>     (address = (protocol = TCP)(host = 127.0.0.1)(port = 1521))
+</span><span class='line'>   )
+</span><span class='line'> (connect_data =
+</span><span class='line'>   (service_name=orademo)
+</span><span class='line'> )
+</span><span class='line'>)
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Setup your environment</h2>
+
+<p>Create a file to store your oracle client environment variables with <code>touch ~/.oracle_client</code></p>
+
+<p>Add the following to it:</p>
+
+<figure class='code'><figcaption><span>.oracle_client </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export ORACLE_BASE=/usr/local/oracle
+</span><span class='line'>export ORACLE_HOME=$ORACLE_BASE/product/instantclient_64/11.2.0.3.0
+</span><span class='line'>export PATH=$ORACLE_HOME/bin:$PATH
+</span><span class='line'>export DYLD_LIBRARY_PATH=$ORACLE_HOME/lib:$DYLD_LIBRARY_PATH
+</span><span class='line'>export TNS_ADMIN=$ORACLE_BASE/admin/network</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Then run:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='text'><span class='line'>echo &quot;source ~/.oracle_client&quot; &gt;&gt; ~/.bash_profile
+</span><span class='line'>source ~/.bash_profile
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Which will add the environment variables to your <code>.bash_profile</code>, You can also find this in my <a href="https://github.com/ismaild/dotfiles">dotfiles</a></p>
+
+<h2>Test Sql*Plus works</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>sqlplus user/pass@orademo
+</span><span class='line'>
+</span><span class='line'>SQL*Plus: Release 11.2.0.3.0 Production on Thu Sep 12 09:19:55 2013
+</span><span class='line'>
+</span><span class='line'>Copyright <span class="o">(</span>c<span class="o">)</span> 1982, 2012, Oracle.  All rights reserved.
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>Connected to:
+</span><span class='line'>Oracle Database 11g Enterprise Edition Release 11.2.0.2.0 - 64bit Production
+</span><span class='line'>With the Partitioning, OLAP, Data Mining and Real Application Testing options
+</span><span class='line'>
+</span><span class='line'>SQL&gt; <span class="k">select </span>table_name from user_tables;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You could also store multiple versions of the client, with different <code>.oracle_client</code> files, with a small shell script you could switch between different versions (i.e like when oracle does not fix a bug for 2 years! )</p>
+
+<h2>Install Ruby oci gem</h2>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd</span> /usr/local/oracle/product/instantclient_64/11.2.0.3.0/lib
+</span><span class='line'>ln -s libclntsh.dylib.11.1 libclntsh.dylib
+</span><span class='line'>ln -s libocci.dylib.11.1 libocci.dylib
+</span><span class='line'>
+</span><span class='line'><span class="c"># Make sure sdk directory is in /usr/local/oracle/product/instantclient_64/11.2.0.3.0/lib</span>
+</span><span class='line'>gem install ruby-oci8
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Test that it works&hellip;</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">irb</span>
+</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;oci8</span>
+</span><span class='line'><span class="s1">irb(main):006:0&gt; o = OCI8.new(&#39;</span><span class="n">user</span><span class="s1">&#39;,&#39;</span><span class="n">pass</span><span class="s1">&#39;,&#39;</span><span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="o">/</span><span class="n">orademo</span><span class="s1">&#39;)</span>
+</span><span class='line'><span class="s1">=&gt; #&lt;OCI8:user&gt;</span>
+</span><span class='line'><span class="s1">irb(main):011:0&gt; o.exec(&#39;</span><span class="nb">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">dual</span><span class="s1">&#39;) do |r| puts r.join(&#39;</span><span class="p">,</span><span class="err">&#39;</span><span class="p">);</span> <span class="k">end</span>
+</span><span class='line'><span class="n">X</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="mi">1</span>
+</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">012</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">exit</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you have issues connecting with an SID or Service Name, try using the IP.</p>
+
+<p>You now have a working oracle database client, and can connect to it from ruby.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Setup a MongoDB container with a docker file]]></title>
@@ -287,7 +522,7 @@
 
 <p>Now that we have an image, we can run <code>docker pull codiez/mongodb</code> to grab the container and run it with <code>docker run -d codiez/mongodb</code></p>
 
-<p>The next post will discuss automating the creation of a container with a dockerfile.</p>
+<p>The next post will discuss <a href="http://blog.codiez.co.za/2013/09/setup-mongodb-container-docker-file/">automating the creation of a container with a dockerfile</a>.</p>
 ]]></content>
   </entry>
   
