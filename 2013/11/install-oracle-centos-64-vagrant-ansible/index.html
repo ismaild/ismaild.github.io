@@ -1,0 +1,598 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Install Oracle on CentOS 6.4 with Vagrant and Ansible - CODIEZ</title>
+  <meta name="author" content="Ismail Dhorat">
+
+  
+  <meta name="description" content="Instructions on how to install oralce on CentOS 64 with Vagrant and Ansible">
+  <meta name="keywords" content="vagrant, ansible, virtualbox, oracle">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.codiez.co.za/2013/11/install-oracle-centos-64-vagrant-ansible">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="CODIEZ" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-4025799-12']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">CODIEZ</a></h1>
+  
+    <h2>second-person plural present subjunctive of coder</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.codiez.co.za" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/archives">Archives</a></li>
+  <li><a href="http://www.codiez.co.za">Home</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Install Oracle on CentOS 6.4 With Vagrant and Ansible</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-10T01:31:00+02:00" pubdate data-updated="true">Nov 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This post will cover installing oracle xe on CentOS 6.4 using vagrant and ansible. If you have not already, read the first post on <a href="/2013/11/vagrant-centos-64-base-box/">creating a vagrant centos base box</a></p>
+
+<h3>About Ansible</h3>
+
+<p><a href="http://www.ansibleworks.com/">Ansible</a> is an IT orchestration engine/configuration management system, that lets you easily describe how you would like your servers to look and then automate it. It differs from Chef and Puppet, as it requires nothing to be installed on the server, it uses ssh. Tasks are described in yml, which can be written and read even by non programmers.</p>
+
+<h3>Vagrant init</h3>
+
+<p>Now that we have the <a href="/2013/11/vagrant-centos-64-base-box/">CentOS 6.4 base box</a>, we can add it to vagrant with:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>vagrant box add centos-64-x86_64 CentOS-6.4-x86_64.box
+</span><span class='line'><span class="nv">$ </span>vagrant box list
+</span><span class='line'>centos-64-x86_64 <span class="o">(</span>virtualbox<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Vagrant uses a <code>Vagrantfile</code> to describe the type of machine you would like to build, and the file should be stored in the root directory of your source code. Next we create the <code>Vagrantfile</code></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkdir ../vagrant-centos-oracle
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ../vagrant-centos-oracle
+</span><span class='line'><span class="nv">$ </span>vagrant init
+</span><span class='line'>A <span class="sb">`</span>Vagrantfile<span class="sb">`</span> has been placed in this directory. You are now
+</span><span class='line'>ready to <span class="sb">`</span>vagrant up<span class="sb">`</span> your first virtual environment! Please <span class="nb">read</span>
+</span><span class='line'>the comments in the Vagrantfile as well as documentation on
+</span><span class='line'><span class="sb">`</span>vagrantup.com<span class="sb">`</span> <span class="k">for </span>more information on using Vagrant.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Edit the <code>Vagrantfile</code> and change <code>config.vm.box</code> to:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;centos-64-x86_64&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we run:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>vagrant up
+</span><span class='line'>Bringing machine <span class="s1">&#39;default&#39;</span> up with <span class="s1">&#39;virtualbox&#39;</span> provider...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Importing base box <span class="s1">&#39;centos-64-x86_64&#39;</span>...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Matching MAC address <span class="k">for </span>NAT networking...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Setting the name of the VM...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Clearing any previously <span class="nb">set </span>forwarded ports...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Creating shared folders metadata...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Clearing any previously <span class="nb">set </span>network interfaces...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Preparing network interfaces based on configuration...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Forwarding ports...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> -- <span class="nv">22</span> <span class="o">=</span>&gt; 2222 <span class="o">(</span>adapter 1<span class="o">)</span>
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Booting VM...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Waiting <span class="k">for </span>machine to boot. This may take a few minutes...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Machine booted and ready!
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Mounting shared folders...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> -- /vagrant
+</span><span class='line'><span class="nv">$ </span>vagrant ssh
+</span><span class='line'>Welcome to your Vagrant-built virtual machine.
+</span><span class='line'><span class="o">[</span>vagrant@localhost ~<span class="o">]</span><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Great it works, we have a basic CentOS 6.4 Minimal install working, this is basically is exactly like the box we created with veewee. Not too interesting just yet. We can add other customizations, like increase the memory size by adding this to the <code>Vagrantfile</code></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:virtualbox</span> <span class="k">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">vb</span><span class="o">.</span><span class="n">customize</span> <span class="o">[</span><span class="s2">&quot;modifyvm&quot;</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="s2">&quot;--memory&quot;</span><span class="p">,</span> <span class="s2">&quot;1024&quot;</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You will also notice, that <code>/vagrant</code> folder is a shared folder with your host machine, the root of the directory where the <code>Vagrantfile</code> is stored.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>vagrant@localhost ~<span class="o">]</span><span class="nv">$ </span>ls /vagrant/
+</span><span class='line'>Vagrantfile
+</span><span class='line'><span class="o">[</span>vagrant@localhost ~<span class="o">]</span><span class="nv">$ </span>touch /vagrant/abd.txt
+</span><span class='line'><span class="o">[</span>vagrant@localhost ~<span class="o">]</span><span class="nv">$ </span>ls /vagrant/
+</span><span class='line'>abd.txt  Vagrantfile
+</span><span class='line'><span class="o">[</span>vagrant@localhost ~<span class="o">]</span><span class="nv">$ </span><span class="nb">exit</span>
+</span><span class='line'><span class="nb">logout</span>
+</span><span class='line'>Connection to 127.0.0.1 closed.
+</span><span class='line'><span class="nv">$ </span>ls
+</span><span class='line'>Vagrantfile abd.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Ansible Oracle Playbook</h3>
+
+<p>Ansible has playbooks, which basically describe all the steps ansible needs to execute to get your system to the required state. All the steps are described in yml format, with specific keywords for each task. You can read more at: <a href="http://www.ansibleworks.com/docs/playbooks.html">http://www.ansibleworks.com/docs/playbooks.html</a></p>
+
+<p>Before we start with our oracle playbook, we need to create a few directories.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkdir provisioning
+</span><span class='line'><span class="nv">$ </span>touch provisioning/oracle-xe.yml
+</span><span class='line'><span class="nv">$ </span>mkdir oracle
+</span><span class='line'><span class="nv">$ </span>touch oracle/xe.rsp
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We also need to install a few base packages before we can continue.</p>
+
+<figure class='code'><figcaption><span>oracle-xe.yml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="nn">---</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">hosts</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">all</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">sudo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">tasks</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ensure packages required are installed</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">yum</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pkg=$item state=latest</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">with_items</span><span class="p-Indicator">:</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">libaio</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">bc</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">flex</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">unzip</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>hosts:</code> specifies which hosts to run the playbook on</li>
+<li>Then we tell ansible to use <code>sudo</code> to run the commands</li>
+<li>We then have the list of tasks we need to run</li>
+<li>The <code>yum</code> command can be used to install packages, specifying them with <code>pkg=</code></li>
+<li><code>with_items</code> lets you specify multiple items and ansible will loop through all of the items on the list and run yum for each package</li>
+<li>For the <code>name:</code> you can use anything that describes the task.</li>
+</ul>
+
+
+<p>Unfortunately due to oracle licensing(Yes, i know it sucks), you will need to accept the license agreement and download the oracle rpm from:
+<a href="http://www.oracle.com/technetwork/products/express-edition/downloads/index.html">http://www.oracle.com/technetwork/products/express-edition/downloads/index.html</a></p>
+
+<p>Save the zip file to the <code>oracle</code> directory.</p>
+
+<p>Now we unzip, and install oracle.</p>
+
+<figure class='code'><figcaption><span>oracle-xe.yml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">unzip oracle rpm</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">command</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/usr/bin/unzip -q /vagrant/oracle/oracle*.rpm.zip -d /vagrant/oracle creates=/vagrant/oracle/Disk1</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">install oracle</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/bin/rpm -ivh /vagrant/oracle/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm creates=/u01</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>creates=</code> defines a directory that is created when the task runs, if the box is reloaded and the directory exists, the task will be skipped.</li>
+<li>You will need this or to ignore errors as the oracle installation returns an error if it is already installed.</li>
+</ul>
+
+
+<p>Next, we configure oracle and the vagrant user environment</p>
+
+<figure class='code'><figcaption><span>oracle-xe.yml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">configure oracle</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/etc/init.d/oracle-xe configure responseFile=/vagrant/oracle/xe.rsp creates=/etc/init.d/oracle-xe</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">setup oracle environment</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/bin/echo &#39;source /u01/app/oracle/product/11.2.0/xe/bin/oracle_env.sh&#39; &gt;&gt; /home/vagrant/.bash_profile</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>shell</code> does what it says on the box</li>
+<li>We need to pass the oracle configure script a response file <code>xe.rsp</code> so it does not wait for input</li>
+<li>Then we setup the vagrant users environment</li>
+</ul>
+
+
+<p>Add the following to <code>oracle/xe.rsp</code></p>
+
+<figure class='code'><figcaption><span>text </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ORACLE_HTTP_PORT=8080
+</span><span class='line'>ORACLE_LISTENER_PORT=1521
+</span><span class='line'>ORACLE_PASSWORD=manager
+</span><span class='line'>ORACLE_CONFIRM_PASSWORD=manager
+</span><span class='line'>ORACLE_DBENABLE=y</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Ismail Dhorat</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-10T01:31:00+02:00" pubdate data-updated="true">Nov 10<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/categories/ansible/'>ansible</a>, <a class='category' href='/categories/oracle/'>oracle</a>, <a class='category' href='/categories/vagrant/'>vagrant</a>, <a class='category' href='/categories/virtualbox/'>virtualbox</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://blog.codiez.co.za/2013/11/install-oracle-centos-64-vagrant-ansible/" data-via="ismail" data-counturl="http://blog.codiez.co.za/2013/11/install-oracle-centos-64-vagrant-ansible/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2013/11/vagrant-centos-64-base-box/" title="Previous Post: Build a Vagrant CentOS 6.4 base box">&laquo; Build a Vagrant CentOS 6.4 base box</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/2013/11/install-oracle-centos-64-vagrant-ansible/">Install Oracle on CentOS 6.4 With Vagrant and Ansible</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/11/vagrant-centos-64-base-box/">Build a Vagrant CentOS 6.4 Base Box</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/09/setup-oracle-instant-client-ruby-oci8-gem-mac/">Setup Oracle Instant Client and Ruby Oci8 Gem on Mac</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/09/setup-mongodb-container-docker-file/">Setup a MongoDB Container With a Docker File</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/09/setup-a-docker-container-with-mongodb/">Setup a Docker Container With MongoDB</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Coderwall</h1>
+  <ul id="cw_badges">
+    <li class="loading">Status updating...</li>
+  </ul>
+
+  <script type="text/javascript">
+    var coderwall = (function(){
+      function render(options, badges){
+        var fragment = '',
+            t = $(options.target),
+            height = 65,
+            width = 65,
+            index;
+
+        for (index in badges) {
+          fragment += '<a class="cw_badge"title="' + badges[index].description + '" href="http://coderwall.com/' + options.user + '">';
+          fragment +=   '<img alt="' + badges[index].description + '" height="' + width + '" width="' + height + '" src="' + badges[index].badge + '"/>';
+          fragment += '</a>';
+        }
+
+        t.html(fragment);
+      }
+      return {
+        showBadges: function(options){
+          $.ajax({
+              url: 'http://coderwall.com/' + options.user + '.json?callback=?'
+            , dataType: 'jsonp'
+            , error: function (err) { $(options.target + ' li.loading').addClass('error').text("Error loading feed"); }
+            , success: function(res) {
+                render(options, res.data.badges);
+            }
+          });
+        }
+      };
+    })();
+
+    $(document).ready(function(){
+      coderwall.showBadges({
+        user: 'ismail',
+        target: '#cw_badges'
+      });
+    });
+  </script>
+  <style type="text/css">
+    .cw_badge img {
+      padding: 5px;
+      border: 0 none !important;
+      -moz-box-shadow: none !important;
+      -webkit-box-shadow: none !important;
+      -o-box-shadow: none !important;
+      box-shadow: none !important;
+    }
+  </style>
+</section>
+
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/ismaild">@ismaild</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'ismaild',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Ismail Dhorat -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'codiez';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.codiez.co.za/2013/11/install-oracle-centos-64-vagrant-ansible/';
+        var disqus_url = 'http://blog.codiez.co.za/2013/11/install-oracle-centos-64-vagrant-ansible/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var hn_like = document.createElement('iframe');
+      hn_like.frameborder="no";
+      hn_like.scrolling="no";
+      hn_like.height="28px";
+      hn_like.width="115px";
+      hn_like.src = "http://hnlike.com/upvote.php?link="
+                    + encodeURIComponent(document.location)
+                    + "&title="
+                    + encodeURIComponent("Install Oracle on CentOS 6.4 with Vagrant and Ansible");
+      hn_like.innerHTML="iframes not supported by your browser";
+      var twitter = document.getElementsByClassName("twitter-share-button")[0];
+
+      twitter.parentNode.insertBefore(
+        hn_like,
+        twitter
+      );
+    })();
+  </script>
+
+
+
+</body>
+</html>

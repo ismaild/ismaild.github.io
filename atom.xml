@@ -4,7 +4,7 @@
   <title><![CDATA[CODIEZ]]></title>
   <link href="http://blog.codiez.co.za/atom.xml" rel="self"/>
   <link href="http://blog.codiez.co.za/"/>
-  <updated>2013-09-12T11:03:48+02:00</updated>
+  <updated>2013-11-10T12:51:32+02:00</updated>
   <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
@@ -12,6 +12,343 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Install Oracle on CentOS 6.4 with Vagrant and Ansible]]></title>
+    <link href="http://blog.codiez.co.za/2013/11/install-oracle-centos-64-vagrant-ansible/"/>
+    <updated>2013-11-10T01:31:00+02:00</updated>
+    <id>http://blog.codiez.co.za/2013/11/install-oracle-centos-64-vagrant-ansible</id>
+    <content type="html"><![CDATA[<p>This post will cover installing oracle xe on CentOS 6.4 using vagrant and ansible. If you have not already, read the first post on <a href="http://blog.codiez.co.za/2013/11/vagrant-centos-64-base-box/">creating a vagrant centos base box</a></p>
+
+<h3>About Ansible</h3>
+
+<p><a href="http://www.ansibleworks.com/">Ansible</a> is an IT orchestration engine/configuration management system, that lets you easily describe how you would like your servers to look and then automate it. It differs from Chef and Puppet, as it requires nothing to be installed on the server, it uses ssh. Tasks are described in yml, which can be written and read even by non programmers.</p>
+
+<h3>Vagrant init</h3>
+
+<p>Now that we have the <a href="http://blog.codiez.co.za/2013/11/vagrant-centos-64-base-box/">CentOS 6.4 base box</a>, we can add it to vagrant with:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>vagrant box add centos-64-x86_64 CentOS-6.4-x86_64.box
+</span><span class='line'><span class="nv">$ </span>vagrant box list
+</span><span class='line'>centos-64-x86_64 <span class="o">(</span>virtualbox<span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Vagrant uses a <code>Vagrantfile</code> to describe the type of machine you would like to build, and the file should be stored in the root directory of your source code. Next we create the <code>Vagrantfile</code></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkdir ../vagrant-centos-oracle
+</span><span class='line'><span class="nv">$ </span><span class="nb">cd</span> ../vagrant-centos-oracle
+</span><span class='line'><span class="nv">$ </span>vagrant init
+</span><span class='line'>A <span class="sb">`</span>Vagrantfile<span class="sb">`</span> has been placed in this directory. You are now
+</span><span class='line'>ready to <span class="sb">`</span>vagrant up<span class="sb">`</span> your first virtual environment! Please <span class="nb">read</span>
+</span><span class='line'>the comments in the Vagrantfile as well as documentation on
+</span><span class='line'><span class="sb">`</span>vagrantup.com<span class="sb">`</span> <span class="k">for </span>more information on using Vagrant.
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Edit the <code>Vagrantfile</code> and change <code>config.vm.box</code> to:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="s2">&quot;centos-64-x86_64&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now we run:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>vagrant up
+</span><span class='line'>Bringing machine <span class="s1">&#39;default&#39;</span> up with <span class="s1">&#39;virtualbox&#39;</span> provider...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Importing base box <span class="s1">&#39;centos-64-x86_64&#39;</span>...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Matching MAC address <span class="k">for </span>NAT networking...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Setting the name of the VM...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Clearing any previously <span class="nb">set </span>forwarded ports...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Creating shared folders metadata...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Clearing any previously <span class="nb">set </span>network interfaces...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Preparing network interfaces based on configuration...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Forwarding ports...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> -- <span class="nv">22</span> <span class="o">=</span>&gt; 2222 <span class="o">(</span>adapter 1<span class="o">)</span>
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Booting VM...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Waiting <span class="k">for </span>machine to boot. This may take a few minutes...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Machine booted and ready!
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> Mounting shared folders...
+</span><span class='line'><span class="o">[</span>default<span class="o">]</span> -- /vagrant
+</span><span class='line'><span class="nv">$ </span>vagrant ssh
+</span><span class='line'>Welcome to your Vagrant-built virtual machine.
+</span><span class='line'><span class="o">[</span>vagrant@localhost ~<span class="o">]</span><span class="err">$</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Great it works, we have a basic CentOS 6.4 Minimal install working, this is basically is exactly like the box we created with veewee. Not too interesting just yet. We can add other customizations, like increase the memory size by adding this to the <code>Vagrantfile</code></p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">config</span><span class="o">.</span><span class="n">vm</span><span class="o">.</span><span class="n">provider</span> <span class="ss">:virtualbox</span> <span class="k">do</span> <span class="o">|</span><span class="n">vb</span><span class="o">|</span>
+</span><span class='line'>    <span class="n">vb</span><span class="o">.</span><span class="n">customize</span> <span class="o">[</span><span class="s2">&quot;modifyvm&quot;</span><span class="p">,</span> <span class="ss">:id</span><span class="p">,</span> <span class="s2">&quot;--memory&quot;</span><span class="p">,</span> <span class="s2">&quot;1024&quot;</span><span class="o">]</span>
+</span><span class='line'>  <span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You will also notice, that <code>/vagrant</code> folder is a shared folder with your host machine, the root of the directory where the <code>Vagrantfile</code> is stored.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="o">[</span>vagrant@localhost ~<span class="o">]</span><span class="nv">$ </span>ls /vagrant/
+</span><span class='line'>Vagrantfile
+</span><span class='line'><span class="o">[</span>vagrant@localhost ~<span class="o">]</span><span class="nv">$ </span>touch /vagrant/abd.txt
+</span><span class='line'><span class="o">[</span>vagrant@localhost ~<span class="o">]</span><span class="nv">$ </span>ls /vagrant/
+</span><span class='line'>abd.txt  Vagrantfile
+</span><span class='line'><span class="o">[</span>vagrant@localhost ~<span class="o">]</span><span class="nv">$ </span><span class="nb">exit</span>
+</span><span class='line'><span class="nb">logout</span>
+</span><span class='line'>Connection to 127.0.0.1 closed.
+</span><span class='line'><span class="nv">$ </span>ls
+</span><span class='line'>Vagrantfile abd.txt
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Ansible Oracle Playbook</h3>
+
+<p>Ansible has playbooks, which basically describe all the steps ansible needs to execute to get your system to the required state. All the steps are described in yml format, with specific keywords for each task. You can read more at: <a href="http://www.ansibleworks.com/docs/playbooks.html">http://www.ansibleworks.com/docs/playbooks.html</a></p>
+
+<p>Before we start with our oracle playbook, we need to create a few directories.</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>mkdir provisioning
+</span><span class='line'><span class="nv">$ </span>touch provisioning/oracle-xe.yml
+</span><span class='line'><span class="nv">$ </span>mkdir oracle
+</span><span class='line'><span class="nv">$ </span>touch oracle/xe.rsp
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We also need to install a few base packages before we can continue.</p>
+
+<figure class='code'><figcaption><span>oracle-xe.yml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'><span class="nn">---</span>
+</span><span class='line'><span class="p-Indicator">-</span> <span class="l-Scalar-Plain">hosts</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">all</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">sudo</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yes</span>
+</span><span class='line'>  <span class="l-Scalar-Plain">tasks</span><span class="p-Indicator">:</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ensure packages required are installed</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">yum</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">pkg=$item state=latest</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">with_items</span><span class="p-Indicator">:</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">libaio</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">bc</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">flex</span>
+</span><span class='line'>        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">unzip</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>hosts:</code> specifies which hosts to run the playbook on</li>
+<li>Then we tell ansible to use <code>sudo</code> to run the commands</li>
+<li>We then have the list of tasks we need to run</li>
+<li>The <code>yum</code> command can be used to install packages, specifying them with <code>pkg=</code></li>
+<li><code>with_items</code> lets you specify multiple items and ansible will loop through all of the items on the list and run yum for each package</li>
+<li>For the <code>name:</code> you can use anything that describes the task.</li>
+</ul>
+
+
+<p>Unfortunately due to oracle licensing(Yes, i know it sucks), you will need to accept the license agreement and download the oracle rpm from:
+<a href="http://www.oracle.com/technetwork/products/express-edition/downloads/index.html">http://www.oracle.com/technetwork/products/express-edition/downloads/index.html</a></p>
+
+<p>Save the zip file to the <code>oracle</code> directory.</p>
+
+<p>Now we unzip, and install oracle.</p>
+
+<figure class='code'><figcaption><span>oracle-xe.yml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">unzip oracle rpm</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">command</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/usr/bin/unzip -q /vagrant/oracle/oracle*.rpm.zip -d /vagrant/oracle creates=/vagrant/oracle/Disk1</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">install oracle</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/bin/rpm -ivh /vagrant/oracle/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm creates=/u01</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>creates=</code> defines a directory that is created when the task runs, if the box is reloaded and the directory exists, the task will be skipped.</li>
+<li>You will need this or to ignore errors as the oracle installation returns an error if it is already installed.</li>
+</ul>
+
+
+<p>Next, we configure oracle and the vagrant user environment</p>
+
+<figure class='code'><figcaption><span>oracle-xe.yml </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='yaml'><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">configure oracle</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/etc/init.d/oracle-xe configure responseFile=/vagrant/oracle/xe.rsp creates=/etc/init.d/oracle-xe</span>
+</span><span class='line'>    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">setup oracle environment</span>
+</span><span class='line'>      <span class="l-Scalar-Plain">shell</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">/bin/echo &#39;source /u01/app/oracle/product/11.2.0/xe/bin/oracle_env.sh&#39; &gt;&gt; /home/vagrant/.bash_profile</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><code>shell</code> does what it says on the box</li>
+<li>We need to pass the oracle configure script a response file <code>xe.rsp</code> so it does not wait for input</li>
+<li>Then we setup the vagrant users environment</li>
+</ul>
+
+
+<p>Add the following to <code>oracle/xe.rsp</code></p>
+
+<figure class='code'><figcaption><span>text </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ORACLE_HTTP_PORT=8080
+</span><span class='line'>ORACLE_LISTENER_PORT=1521
+</span><span class='line'>ORACLE_PASSWORD=manager
+</span><span class='line'>ORACLE_CONFIRM_PASSWORD=manager
+</span><span class='line'>ORACLE_DBENABLE=y</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Build a Vagrant CentOS 6.4 base box]]></title>
+    <link href="http://blog.codiez.co.za/2013/11/vagrant-centos-64-base-box/"/>
+    <updated>2013-11-09T15:39:00+02:00</updated>
+    <id>http://blog.codiez.co.za/2013/11/vagrant-centos-64-base-box</id>
+    <content type="html"><![CDATA[<p>This post will discuss building a CentOs 6.4 vagrant box, and in later posts we will use this box and ansible to further define our machines, such as installing oracle xe.</p>
+
+<h3>About Vagrant</h3>
+
+<p><a href="http://www.vagrantup.com/">Vagrant</a> lets you create and configure lightweight, reproducible, and portable development environments. All too often you will find teams developing off a central server, purely because of the pain of setting up a dev environment. Nothing is automated. There are many challenges with this approach. IMHO this slows down a team, and experimentation is discouraged and you end up &ldquo;stepping on each others code&rdquo;.</p>
+
+<p>Vagrant can solve some these challenges, ever started a new project and spent a few days just getting your environment setup? Well with vagrant this should be a thing of the past.</p>
+
+<h3>Before you start</h3>
+
+<p>You will need some baseline software before we begin. Make sure you have the following installed.</p>
+
+<ul>
+<li><a href="http://git-scm.com/">Git</a></li>
+<li><a href="http://www.vagrantup.com/">Vagrant</a></li>
+<li><a href="http://www.ansibleworks.com/docs/intro_installation.html">Ansible</a></li>
+<li><a href="https://www.virtualbox.org/">Virtualbox</a></li>
+<li><a href="https://github.com/jedi4ever/veewee/blob/master/doc/requirements.md">Veewee</a></li>
+</ul>
+
+
+<p>Lets check we have everything installed</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span>git version
+</span><span class='line'>git version 1.8.3.4 <span class="o">(</span>Apple Git-47<span class="o">)</span>
+</span><span class='line'><span class="nv">$ </span>vagrant --version
+</span><span class='line'>Vagrant 1.3.5
+</span><span class='line'><span class="nv">$ </span>VBoxManage --version
+</span><span class='line'>4.3.2r90405
+</span><span class='line'><span class="nv">$ </span>veewee version
+</span><span class='line'>Version : 0.3.12 - use at your own risk
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Build a CentOS 6.4 base box</h3>
+
+<p>You can find a number of <a href="https://www.google.co.za/search?q=vagrant+boxes">vagrant base boxes online</a>, but i prefer creating one from scratch. We can do that easily with veewee.</p>
+
+<p>First we clone the repo: <code>git clone https://github.com/ismaild/vagrant-boxes.git</code>. I have disabled chef and puppet since we will be using ansible. Feel free to add it back in if you want it, which you can by editing: <code>definitions/CentOS-6.4-x86_64/definition.rb</code></p>
+
+<p>Veewee will automatically try and download the required ISO files. If you already have them, you can put them in the <code>iso</code> directory and it will not need to download.</p>
+
+<ul>
+<li><a href="http://yum.singlehop.com/CentOS/6.4/isos/x86_64/CentOS-6.4-x86_64-minimal.iso">http://yum.singlehop.com/CentOS/6.4/isos/x86_64/CentOS-6.4-x86_64-minimal.iso</a></li>
+<li><a href="http://download.virtualbox.org/virtualbox/4.3.2/VBoxGuestAdditions_4.3.2.iso">http://download.virtualbox.org/virtualbox/4.3.2/VBoxGuestAdditions_4.3.2.iso</a></li>
+</ul>
+
+
+<p>Just make sure the version of the virtualbox guest additions matches your installed version of virtualbox.</p>
+
+<p>Then run the following commands:</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">$ </span><span class="nb">cd </span>vagrant-boxes
+</span><span class='line'><span class="nv">$ </span>veewee vbox list
+</span><span class='line'><span class="c"># if no boxes defined</span>
+</span><span class='line'><span class="nv">$ </span>veewee vbox define CentOS-6.4-x86_64 CentOS-6.4-x86_64-minimal
+</span><span class='line'><span class="c"># Build the box</span>
+</span><span class='line'><span class="nv">$ </span>veewee vbox build CentOS-6.4-x86_64
+</span><span class='line'><span class="c"># Eject the disks from the running VM and shutdown.</span>
+</span><span class='line'><span class="c"># Package the box</span>
+</span><span class='line'><span class="nv">$ </span>vagrant package --base CentOS-6.4-x86_64 --output CentOS-6.4-x86_64.box
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Setup Oracle instant client and ruby oci8 gem on Mac]]></title>
@@ -155,11 +492,13 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
+<span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>export ORACLE_BASE=/usr/local/oracle
 </span><span class='line'>export ORACLE_HOME=$ORACLE_BASE/product/instantclient_64/11.2.0.3.0
 </span><span class='line'>export PATH=$ORACLE_HOME/bin:$PATH
 </span><span class='line'>export DYLD_LIBRARY_PATH=$ORACLE_HOME/lib:$DYLD_LIBRARY_PATH
-</span><span class='line'>export TNS_ADMIN=$ORACLE_BASE/admin/network</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>export TNS_ADMIN=$ORACLE_BASE/admin/network
+</span><span class='line'>export SQLPATH=$ORACLE_HOME/sqlplus/admin</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Then run:</p>

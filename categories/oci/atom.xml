@@ -4,7 +4,7 @@
   <title><![CDATA[Category: oci | CODIEZ]]></title>
   <link href="http://blog.codiez.co.za/categories/oci/atom.xml" rel="self"/>
   <link href="http://blog.codiez.co.za/"/>
-  <updated>2013-09-12T11:03:48+02:00</updated>
+  <updated>2013-11-10T12:51:32+02:00</updated>
   <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
@@ -164,11 +164,13 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
+<span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>export ORACLE_BASE=/usr/local/oracle
 </span><span class='line'>export ORACLE_HOME=$ORACLE_BASE/product/instantclient_64/11.2.0.3.0
 </span><span class='line'>export PATH=$ORACLE_HOME/bin:$PATH
 </span><span class='line'>export DYLD_LIBRARY_PATH=$ORACLE_HOME/lib:$DYLD_LIBRARY_PATH
-</span><span class='line'>export TNS_ADMIN=$ORACLE_BASE/admin/network</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>export TNS_ADMIN=$ORACLE_BASE/admin/network
+</span><span class='line'>export SQLPATH=$ORACLE_HOME/sqlplus/admin</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Then run:</p>
 

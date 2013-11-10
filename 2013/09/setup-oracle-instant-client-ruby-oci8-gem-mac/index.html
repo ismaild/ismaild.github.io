@@ -10,7 +10,7 @@
 
   
   <meta name="description" content="Setup Oracle instant client on Mac OsX and ruby oci8 gem">
-  <meta name="keywords" content="oracle, osx">
+  <meta name="keywords" content="oracle, mac">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -241,11 +241,13 @@
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
+<span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>export ORACLE_BASE=/usr/local/oracle
 </span><span class='line'>export ORACLE_HOME=$ORACLE_BASE/product/instantclient_64/11.2.0.3.0
 </span><span class='line'>export PATH=$ORACLE_HOME/bin:$PATH
 </span><span class='line'>export DYLD_LIBRARY_PATH=$ORACLE_HOME/lib:$DYLD_LIBRARY_PATH
-</span><span class='line'>export TNS_ADMIN=$ORACLE_BASE/admin/network</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'>export TNS_ADMIN=$ORACLE_BASE/admin/network
+</span><span class='line'>export SQLPATH=$ORACLE_HOME/sqlplus/admin</span></code></pre></td></tr></table></div></figure>
 
 
 <p>Then run:</p>
@@ -358,7 +360,7 @@
 
 <span class="categories">
   
-    <a class='category' href='/categories/oci/'>oci</a>, <a class='category' href='/categories/oracle/'>oracle</a>, <a class='category' href='/categories/osx/'>osx</a>, <a class='category' href='/categories/ruby/'>ruby</a>
+    <a class='category' href='/categories/mac/'>mac</a>, <a class='category' href='/categories/oci/'>oci</a>, <a class='category' href='/categories/oracle/'>oracle</a>, <a class='category' href='/categories/ruby/'>ruby</a>
   
 </span>
 
@@ -379,6 +381,8 @@
         <a class="basic-alignment left" href="/2013/09/setup-mongodb-container-docker-file/" title="Previous Post: Setup a MongoDB container with a docker file">&laquo; Setup a MongoDB container with a docker file</a>
       
       
+        <a class="basic-alignment right" href="/2013/11/vagrant-centos-64-base-box/" title="Next Post: Build a Vagrant CentOS 6.4 base box">Build a Vagrant CentOS 6.4 base box &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -398,6 +402,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/2013/11/install-oracle-centos-64-vagrant-ansible/">Install Oracle on CentOS 6.4 With Vagrant and Ansible</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2013/11/vagrant-centos-64-base-box/">Build a Vagrant CentOS 6.4 Base Box</a>
+      </li>
+    
+      <li class="post">
         <a href="/2013/09/setup-oracle-instant-client-ruby-oci8-gem-mac/">Setup Oracle Instant Client and Ruby Oci8 Gem on Mac</a>
       </li>
     
@@ -407,14 +419,6 @@
     
       <li class="post">
         <a href="/2013/09/setup-a-docker-container-with-mongodb/">Setup a Docker Container With MongoDB</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/09/hello-docker/">Hello Docker</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2013/08/uninstall-mysql-macports-install-homebrew-mac-osx/">Uninstall MySQL & MacPorts, Reinstall MySQL With Homebrew on Mac OSX</a>
       </li>
     
   </ul>
