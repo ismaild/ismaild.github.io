@@ -4,7 +4,7 @@
   <title><![CDATA[CODIEZ]]></title>
   <link href="http://blog.codiez.co.za/atom.xml" rel="self"/>
   <link href="http://blog.codiez.co.za/"/>
-  <updated>2013-11-10T16:01:37+02:00</updated>
+  <updated>2013-11-10T16:20:53+02:00</updated>
   <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
@@ -28,7 +28,7 @@
 
 <h3>Vagrant init</h3>
 
-<p>Now that we have the <a href="http://blog.codiez.co.za/2013/11/vagrant-centos-64-base-box/">CentOS 6.4 base box</a>, we can add it to vagrant with:</p>
+<p>Lets make sure we have our <a href="http://blog.codiez.co.za/2013/11/vagrant-centos-64-base-box/">CentOS 6.4 base box</a></p>
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
