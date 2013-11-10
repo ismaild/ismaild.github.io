@@ -62,4 +62,7 @@ $ veewee vbox build CentOS-6.4-x86_64
 # Eject the disks from the running VM and shutdown.
 # Package the box
 $ vagrant package --base CentOS-6.4-x86_64 --output CentOS-6.4-x86_64.box
+$ vagrant box add centos-64-x86_64 CentOS-6.4-x86_64.box
 {% endcodeblock %}
+
+Now we have a base CentOS 6.4 box to use. In the next post we will go through [setting up oracle with ansible](/2013/11/install-oracle-centos-64-vagrant-ansible/).
