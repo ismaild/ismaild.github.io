@@ -4,7 +4,7 @@
   <title><![CDATA[CODIEZ]]></title>
   <link href="http://blog.codiez.co.za/atom.xml" rel="self"/>
   <link href="http://blog.codiez.co.za/"/>
-  <updated>2013-11-10T15:56:53+02:00</updated>
+  <updated>2013-11-10T16:01:37+02:00</updated>
   <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
@@ -159,7 +159,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Before installing oracle, a few base packages are needed. Lets ensure our machine will have these packages before oracle is installed by adding this to the playbook:</p>
+<p>Before installing oracle, a few base packages are needed. Lets ensure our playbook caters for these:</p>
 
 <figure class='code'><figcaption><span>oracle-xe.yml </span></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
