@@ -18,7 +18,7 @@ The source code is available at: https://github.com/ismaild/vagrant-centos-oracl
 
 ### Vagrant init
 
-Now that we have the [CentOS 6.4 base box](/2013/11/vagrant-centos-64-base-box/), we can add it to vagrant with: 
+Lets make sure we have our [CentOS 6.4 base box](/2013/11/vagrant-centos-64-base-box/)
 
 {% codeblock lang:bash %}
 $ vagrant box list

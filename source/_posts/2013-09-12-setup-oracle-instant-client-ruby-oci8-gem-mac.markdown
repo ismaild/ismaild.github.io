@@ -69,8 +69,8 @@ mv * /usr/local/oracle/product/instantclient_64/11.2.0.3.0/bin/
 ## Setup TNS Names
 
 {% codeblock lang:bash %}
-mkdir -p /usr/local/admin/network
-touch /usr/local/admin/network/tnsnames.ora
+mkdir -p /usr/local/oracle/admin/network
+touch /usr/local/oracle/admin/network/tnsnames.ora
 {% endcodeblock %}
 
 Put in your tnsnames, example:
@@ -146,7 +146,7 @@ Test that it works...
 
 {% codeblock lang:ruby %}
 irb
-irb(main):001:0> require 'oci8
+irb(main):001:0> require 'oci8'
 irb(main):006:0> o = OCI8.new('user','pass','127.0.0.1/orademo')
 => #<OCI8:user>
 irb(main):011:0> o.exec('select * from dual') do |r| puts r.join(','); end
