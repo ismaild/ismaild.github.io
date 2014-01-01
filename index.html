@@ -826,8 +826,8 @@
 
 <figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /usr/local/admin/network
-</span><span class='line'>touch /usr/local/admin/network/tnsnames.ora
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /usr/local/oracle/admin/network
+</span><span class='line'>touch /usr/local/oracle/admin/network/tnsnames.ora
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -946,10 +946,10 @@
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">irb</span>
-</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;oci8</span>
-</span><span class='line'><span class="s1">irb(main):006:0&gt; o = OCI8.new(&#39;</span><span class="n">user</span><span class="s1">&#39;,&#39;</span><span class="n">pass</span><span class="s1">&#39;,&#39;</span><span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="o">/</span><span class="n">orademo</span><span class="s1">&#39;)</span>
-</span><span class='line'><span class="s1">=&gt; #&lt;OCI8:user&gt;</span>
-</span><span class='line'><span class="s1">irb(main):011:0&gt; o.exec(&#39;</span><span class="nb">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">dual</span><span class="s1">&#39;) do |r| puts r.join(&#39;</span><span class="p">,</span><span class="err">&#39;</span><span class="p">);</span> <span class="k">end</span>
+</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="s1">&#39;oci8&#39;</span>
+</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">006</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="no">OCI8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span><span class="s1">&#39;pass&#39;</span><span class="p">,</span><span class="s1">&#39;127.0.0.1/orademo&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="o">=&gt;</span> <span class="c1">#&lt;OCI8:user&gt;</span>
+</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">011</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="s1">&#39;select * from dual&#39;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">r</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">);</span> <span class="k">end</span>
 </span><span class='line'><span class="n">X</span>
 </span><span class='line'><span class="o">=&gt;</span> <span class="mi">1</span>
 </span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">012</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">exit</span>
@@ -1814,7 +1814,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Ismail Dhorat -
+  Copyright &copy; 2014 - Ismail Dhorat -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

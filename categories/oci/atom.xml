@@ -4,7 +4,7 @@
   <title><![CDATA[Category: oci | CODIEZ]]></title>
   <link href="http://blog.codiez.co.za/categories/oci/atom.xml" rel="self"/>
   <link href="http://blog.codiez.co.za/"/>
-  <updated>2013-11-10T16:20:53+02:00</updated>
+  <updated>2014-01-01T17:15:28+02:00</updated>
   <id>http://blog.codiez.co.za/</id>
   <author>
     <name><![CDATA[Ismail Dhorat]]></name>
@@ -119,8 +119,8 @@
 
 <p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /usr/local/admin/network
-</span><span class='line'>touch /usr/local/admin/network/tnsnames.ora
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>mkdir -p /usr/local/oracle/admin/network
+</span><span class='line'>touch /usr/local/oracle/admin/network/tnsnames.ora
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>Put in your tnsnames, example:</p>
@@ -239,8 +239,8 @@
 <span class='line-number'>7</span>
 <span class='line-number'>8</span>
 </pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">irb</span>
-</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">oci8</span>
-</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">006</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="no">OCI8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="err">&#39;</span><span class="n">user</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">pass</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="o">/</span><span class="n">orademo</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span>
+</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">001</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="nb">require</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">oci8</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span>
+</span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">006</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">o</span> <span class="o">=</span> <span class="no">OCI8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">user</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">pass</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;,</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="mi">127</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="o">/</span><span class="n">orademo</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span>
 </span><span class='line'><span class="o">=&gt;</span> <span class="c1">#&amp;lt;OCI8:user&gt;</span>
 </span><span class='line'><span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mo">011</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="n">o</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="nb">select</span> <span class="o">*</span> <span class="n">from</span> <span class="n">dual</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span> <span class="nb">puts</span> <span class="n">r</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;,</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;);</span> <span class="k">end</span>
 </span><span class='line'><span class="n">X</span>
